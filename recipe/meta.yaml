@@ -1,7 +1,7 @@
-{% set version = "1.4.0rc3" %}
-{% set org = "scopatz" %}
-{% set branch = "cv" %}
-{% set sha256 = "8567f1265117e97edd6f4227846565c2f2cafb90e32ded1b95cf15ba7afd2f25" %}
+{% set version = "1.4.0" %}
+{% set org = "cyclus" %}
+{% set branch = "master" %}
+{% set sha256 = "9b4cb57a1c67329d7b312bd038893de4e82ade2e822ba33a3b2ff7c14beca7da" %}
 {% set variant = "openblas" %}
 
 package:
@@ -14,7 +14,7 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: 2
+  number: 3
   skip: True  # [win or not py35]
   detect_binary_files_with_prefix: true
   features:
@@ -65,3 +65,5 @@ about:
 extra:
   recipe-maintainers:
     - scopatz
+    - gonuke
+    - BaaaaaM
