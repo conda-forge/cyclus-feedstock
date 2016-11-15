@@ -1,4 +1,4 @@
-{% set version = "1.4.1" %}
+{% set version = "1.4.2" %}
 {% set org = "cyclus" %}
 {% set branch = "v1.4.2-rc1" %}
 {% set sha256 = "ab6e189aaa1a3e0527fdf8f759b282691800080a4167dee1b86db8b43bf30023" %}
@@ -30,7 +30,7 @@ requirements:
     - coincbc
     - blas 1.1 {{ variant }}
     - openblas 0.2.18|0.2.18.*
-    - boost 1.61.*
+    - boost 1.62.*
     - hdf5 1.8.17|1.8.17.*
     - sqlite 3.13.*
     - pcre
@@ -46,7 +46,7 @@ requirements:
     - coincbc
     - blas 1.1 {{ variant }}
     - openblas 0.2.18|0.2.18.*
-    - boost 1.61.*
+    - boost 1.62.*
     - hdf5 1.8.17|1.8.17.*
     - sqlite 3.13.*
     - pcre
