@@ -1,7 +1,7 @@
-{% set version = "1.4.0" %}
+{% set version = "1.4.1" %}
 {% set org = "cyclus" %}
-{% set branch = "master" %}
-{% set sha256 = "9b4cb57a1c67329d7b312bd038893de4e82ade2e822ba33a3b2ff7c14beca7da" %}
+{% set branch = "v1.4.2-rc1" %}
+{% set sha256 = "ab6e189aaa1a3e0527fdf8f759b282691800080a4167dee1b86db8b43bf30023" %}
 {% set variant = "openblas" %}
 
 package:
@@ -14,8 +14,8 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: 3
-  skip: True  # [win or not py35]
+  number: 0
+  skip: True  # [win or not (py27 or py35)]
   detect_binary_files_with_prefix: true
   features:
     - blas_{{ variant }}
@@ -37,7 +37,11 @@ requirements:
     - gettext
     - bzip2 1.0.*
     - xz 5.2.*
+    - cython
+    - jinja2
+    - numpy x.x
   run:
+    - python
     - libxmlpp
     - coincbc
     - blas 1.1 {{ variant }}
@@ -49,6 +53,8 @@ requirements:
     - gettext
     - bzip2 1.0.*
     - xz 5.2.*
+    - numpy x.x
+    - pandas
 
 test:
   requires:
