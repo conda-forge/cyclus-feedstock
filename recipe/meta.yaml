@@ -1,6 +1,6 @@
 {% set version = "1.4.2" %}
 {% set org = "cyclus" %}
-{% set branch = "v1.4.2-rc1" %}
+{% set branch = "1.4.2-rc1" %}
 {% set sha256 = "ab6e189aaa1a3e0527fdf8f759b282691800080a4167dee1b86db8b43bf30023" %}
 {% set variant = "openblas" %}
 
