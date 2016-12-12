@@ -1,7 +1,7 @@
 {% set version = "1.4.0" %}
 {% set org = "cyclus" %}
 {% set branch = "master" %}
-{% set sha256 = "9b4cb57a1c67329d7b312bd038893de4e82ade2e822ba33a3b2ff7c14beca7da" %}
+{% set sha256 = "c1dfee50e05cbc15b262e1e1844663c3744e26eab76c5048f548a09e80f1af9b" %}
 {% set variant = "openblas" %}
 
 package:
@@ -14,7 +14,7 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: 3
+  number: 4
   skip: True  # [win or not py35]
   detect_binary_files_with_prefix: true
   features:
