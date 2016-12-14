@@ -1,7 +1,7 @@
-{% set version = "1.4.2" %}
+{% set version = "1.5.0" %}
 {% set org = "cyclus" %}
 {% set branch = "master" %}
-{% set sha256 = "c1dfee50e05cbc15b262e1e1844663c3744e26eab76c5048f548a09e80f1af9b" %}
+{% set sha256 = "1feee832b0c7284c0e1dce11c58da109f9d3955b2f8b38ce3090ce08ef2fc2c1" %}
 {% set variant = "openblas" %}
 
 package:
@@ -24,6 +24,8 @@ requirements:
   build:
     - toolchain
     - python
+    - cython
+    - pandas
     - cmake
     - pkg-config
     - libxmlpp
