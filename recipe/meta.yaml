@@ -29,7 +29,7 @@ requirements:
     - libxmlpp
     - coincbc
     - blas 1.1 {{ variant }}
-    - openblas 0.2.18|0.2.18.*
+    - openblas 0.2.19|0.2.19.*
     - boost 1.62.*
     - hdf5 1.8.17|1.8.17.*
     - sqlite 3.13.*
@@ -45,7 +45,7 @@ requirements:
     - libxmlpp
     - coincbc
     - blas 1.1 {{ variant }}
-    - openblas 0.2.18|0.2.18.*
+    - openblas 0.2.19|0.2.19.*
     - boost 1.62.*
     - hdf5 1.8.17|1.8.17.*
     - sqlite 3.13.*
