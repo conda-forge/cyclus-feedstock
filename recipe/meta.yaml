@@ -39,7 +39,6 @@ requirements:
     - gettext
     - bzip2 1.0.*
     - xz 5.2.*
-    - cython
     - jinja2
     - numpy x.x
   run:
