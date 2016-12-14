@@ -49,3 +49,4 @@ nosetests test_include_recipe.py  test_lotka_volterra.py
 nosetests test_null_sink.py  test_source_to_sink.py
 nosetests test_trivial_cycle.py test_inventories.py
 nosetests test_minimal_cycle.py
+nosetests test_cycluslib.py
