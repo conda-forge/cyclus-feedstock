@@ -15,7 +15,7 @@ source:
 
 build:
   number: 0
-  skip: True  # [win or not (py27 or py35)]
+  skip: True  # [win or py34]
   detect_binary_files_with_prefix: true
   features:
     - blas_{{ variant }}
@@ -32,7 +32,7 @@ requirements:
     - coincbc
     - blas 1.1 {{ variant }}
     - openblas 0.2.19|0.2.19.*
-    - boost 1.62.*
+    - boost 1.63.*
     - hdf5 1.8.17|1.8.17.*
     - sqlite 3.13.*
     - pcre
@@ -47,7 +47,7 @@ requirements:
     - coincbc
     - blas 1.1 {{ variant }}
     - openblas 0.2.19|0.2.19.*
-    - boost 1.62.*
+    - boost 1.63.*
     - hdf5 1.8.17|1.8.17.*
     - sqlite 3.13.*
     - pcre
@@ -62,6 +62,8 @@ test:
     - setuptools
     - nose
     - pytables
+  source_files:
+    - tests
 
 about:
   home: http://fuelcycle.org/
