@@ -14,7 +14,7 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: 1
+  number: 2
   skip: True  # [win or py34]
   detect_binary_files_with_prefix: true
   features:
@@ -32,7 +32,7 @@ requirements:
     - coincbc
     - blas 1.1 {{ variant }}
     - openblas 0.2.19|0.2.19.*
-    - boost-cpp 1.64.*
+    - boost-cpp 1.65.1
     - hdf5 1.8.18|1.8.18.*
     - sqlite 3.13.*
     - pcre
@@ -47,7 +47,7 @@ requirements:
     - coincbc
     - blas 1.1 {{ variant }}
     - openblas 0.2.19|0.2.19.*
-    - boost-cpp 1.64.*
+    - boost-cpp 1.65.1
     - hdf5 1.8.18|1.8.18.*
     - sqlite 3.13.*
     - pcre
