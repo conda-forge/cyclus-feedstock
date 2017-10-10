@@ -40,7 +40,7 @@ requirements:
     - bzip2 1.0.*
     - xz 5.2.*
     - jinja2
-    - numpy x.x
+    - numpy 1.11.*
   run:
     - python
     - libxmlpp
@@ -54,7 +54,7 @@ requirements:
     - gettext
     - bzip2 1.0.*
     - xz 5.2.*
-    - numpy x.x
+    - numpy >=1.11
     - pandas
 
 test:
