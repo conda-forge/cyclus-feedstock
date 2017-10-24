@@ -1,6 +1,4 @@
 {% set version = "1.5.1" %}
-{% set org = "cyclus" %}
-{% set branch = "master" %}
 {% set sha256 = "7cb918fbb4e8d2fbe219bfa250604e0f35b5273436afb2d96b3192c4c07061d4" %}
 {% set variant = "openblas" %}
 
@@ -10,7 +8,7 @@ package:
 
 source:
   fn: cyclus-{{ version }}-{{ sha256 }}.tar.gz
-  url: https://github.com/{{ org }}/cyclus/archive/{{ branch }}.tar.gz
+  url: https://github.com/cyclus/cyclus/archive/{{ version }}.tar.gz
   sha256: {{ sha256 }}
 
 build:
