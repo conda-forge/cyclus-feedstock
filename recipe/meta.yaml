@@ -1,7 +1,5 @@
-{% set version = "1.5.0" %}
-{% set org = "cyclus" %}
-{% set branch = "master" %}
-{% set sha256 = "1feee832b0c7284c0e1dce11c58da109f9d3955b2f8b38ce3090ce08ef2fc2c1" %}
+{% set version = "1.5.1" %}
+{% set sha256 = "7cb918fbb4e8d2fbe219bfa250604e0f35b5273436afb2d96b3192c4c07061d4" %}
 {% set variant = "openblas" %}
 
 package:
@@ -10,11 +8,11 @@ package:
 
 source:
   fn: cyclus-{{ version }}-{{ sha256 }}.tar.gz
-  url: https://github.com/{{ org }}/cyclus/archive/{{ branch }}.tar.gz
+  url: https://github.com/cyclus/cyclus/archive/{{ version }}.tar.gz
   sha256: {{ sha256 }}
 
 build:
-  number: 1
+  number: 2
   skip: True  # [win or py34]
   detect_binary_files_with_prefix: true
   features:
@@ -32,7 +30,7 @@ requirements:
     - coincbc
     - blas 1.1 {{ variant }}
     - openblas 0.2.19|0.2.19.*
-    - boost-cpp 1.64.*
+    - boost-cpp 1.65.1
     - hdf5 1.8.18|1.8.18.*
     - sqlite 3.13.*
     - pcre
@@ -40,21 +38,21 @@ requirements:
     - bzip2 1.0.*
     - xz 5.2.*
     - jinja2
-    - numpy x.x
+    - numpy 1.11.*
   run:
     - python
     - libxmlpp
     - coincbc
     - blas 1.1 {{ variant }}
     - openblas 0.2.19|0.2.19.*
-    - boost-cpp 1.64.*
+    - boost-cpp 1.65.1
     - hdf5 1.8.18|1.8.18.*
     - sqlite 3.13.*
     - pcre
     - gettext
     - bzip2 1.0.*
     - xz 5.2.*
-    - numpy x.x
+    - numpy >=1.11
     - pandas
 
 test:
