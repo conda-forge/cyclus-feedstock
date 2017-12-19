@@ -1,5 +1,5 @@
-{% set version = "1.5.1" %}
-{% set sha256 = "7cb918fbb4e8d2fbe219bfa250604e0f35b5273436afb2d96b3192c4c07061d4" %}
+{% set version = "1.5.2" %}
+{% set sha256 = "633b02182f1655135086839a549f6228953fa2b8c0fdf0fe337206798ec35c01" %}
 {% set variant = "openblas" %}
 
 package:
@@ -12,8 +12,8 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: 3
-  skip: True  # [win or py34]
+  number: 0
+  skip: True  # [win or py27 or py34]
   detect_binary_files_with_prefix: true
   features:
     - blas_{{ variant }}
@@ -31,7 +31,7 @@ requirements:
     - blas 1.1 {{ variant }}
     - openblas 0.2.20|0.2.20.*
     - boost-cpp 1.65.1
-    - hdf5 1.8.18|1.8.18.*
+    - hdf5 1.10.1
     - sqlite 3.13.*
     - pcre
     - gettext
@@ -46,7 +46,7 @@ requirements:
     - blas 1.1 {{ variant }}
     - openblas 0.2.20|0.2.20.*
     - boost-cpp 1.65.1
-    - hdf5 1.8.18|1.8.18.*
+    - hdf5 1.10.1
     - sqlite 3.13.*
     - pcre
     - gettext
