@@ -14,14 +14,16 @@ Summary: The agent-based fuel cycle simulator.
 Current build status
 ====================
 
-Linux: [![Circle CI](https://circleci.com/gh/conda-forge/cyclus-feedstock.svg?style=shield)](https://circleci.com/gh/conda-forge/cyclus-feedstock)
-OSX: [![TravisCI](https://travis-ci.org/conda-forge/cyclus-feedstock.svg?branch=master)](https://travis-ci.org/conda-forge/cyclus-feedstock)
-Windows: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
+[![Linux](https://img.shields.io/circleci/project/github/conda-forge/cyclus-feedstock/master.svg?label=Linux)](https://circleci.com/gh/conda-forge/cyclus-feedstock)
+[![OSX](https://img.shields.io/travis/conda-forge/cyclus-feedstock/master.svg?label=macOS)](https://travis-ci.org/conda-forge/cyclus-feedstock)
+![Windows disabled](https://img.shields.io/badge/Windows-disabled-lightgrey.svg)
 
 Current release info
 ====================
-Version: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/cyclus/badges/version.svg)](https://anaconda.org/conda-forge/cyclus)
-Downloads: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/cyclus/badges/downloads.svg)](https://anaconda.org/conda-forge/cyclus)
+
+[![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/cyclus.svg)](https://anaconda.org/conda-forge/cyclus)
+[![Conda Version](https://img.shields.io/conda/vn/conda-forge/cyclus.svg)](https://anaconda.org/conda-forge/cyclus)
+[![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/cyclus.svg)](https://anaconda.org/conda-forge/cyclus)
 
 Installing cyclus
 =================
