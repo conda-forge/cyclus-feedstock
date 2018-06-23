@@ -20,39 +20,41 @@ build:
 
 requirements:
   build:
-    - toolchain
+    - cmake
+    - pkg-config
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+  host:
     - python
     - cython
     - pandas
-    - cmake
-    - pkg-config
     - libxmlpp
     - coincbc
     - blas 1.1 {{ variant }}
-    - openblas 0.2.20|0.2.20.*
-    - boost-cpp 1.66.0
-    - hdf5 1.10.1
-    - sqlite 3.13.*
+    - openblas
+    - boost-cpp
+    - hdf5
+    - sqlite
     - pcre
     - gettext
-    - bzip2 1.0.*
-    - xz 5.2.*
+    - bzip2
+    - xz
     - jinja2
-    - numpy 1.11.*
+    - numpy
   run:
     - python
     - libxmlpp
     - coincbc
     - blas 1.1 {{ variant }}
-    - openblas 0.2.20|0.2.20.*
-    - boost-cpp 1.66.0
-    - hdf5 1.10.1
-    - sqlite 3.*
+    - openblas
+    - boost-cpp
+    - hdf5
+    - sqlite
     - pcre
     - gettext
-    - bzip2 1.0.*
-    - xz 5.2.*
-    - numpy >=1.11
+    - bzip2
+    - xz
+    - {{ pin_compatible('numpy') }}
     - pandas
     - websockets
     - pprintpp
