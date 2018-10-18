@@ -1,5 +1,5 @@
 boost_cpp:
-- 1.67.0
+- 1.68.0
 build_number_decrement:
 - '0'
 bzip2:
@@ -13,7 +13,7 @@ channel_targets:
 cxx_compiler:
 - gxx
 docker_image:
-- conda/c3i-linux-64
+- condaforge/linux-anvil-comp7
 hdf5:
 - 1.10.3
 numpy:
