@@ -12,52 +12,20 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: 2
-  skip: True  # [win or py27 or py34 or (osx and py35)]
+  number: 3
+  skip: True  # [win]
   detect_binary_files_with_prefix: true
   features:
     - blas_{{ variant }}
 
 requirements:
   build:
-    - cmake
-    - pkg-config
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
   host:
-    - python
-    - cython
-    - pandas
-    - libxmlpp
-    - coincbc
-    - blas 1.1 {{ variant }}
-    - openblas
-    - boost-cpp
-    - hdf5
-    - sqlite
-    - pcre
-    - gettext
-    - bzip2
-    - xz
-    - jinja2
-    - numpy
+    - cyclus-build-deps
   run:
-    - python
-    - libxmlpp
-    - coincbc
-    - blas 1.1 {{ variant }}
-    - openblas
-    - boost-cpp
-    - hdf5
-    - sqlite
-    - pcre
-    - gettext
-    - bzip2
-    - xz
-    - {{ pin_compatible('numpy') }}
-    - pandas
-    - websockets
-    - pprintpp
+    - cyclus-build-deps
 
 test:
   requires:
