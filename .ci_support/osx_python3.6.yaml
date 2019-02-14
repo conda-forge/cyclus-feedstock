@@ -1,9 +1,5 @@
 MACOSX_DEPLOYMENT_TARGET:
 - '10.9'
-boost_cpp:
-- 1.68.0
-bzip2:
-- '1'
 c_compiler:
 - clang
 channel_sources:
@@ -12,33 +8,13 @@ channel_targets:
 - conda-forge main
 cxx_compiler:
 - clangxx
-hdf5:
-- 1.10.4
 macos_machine:
 - x86_64-apple-darwin13.4.0
 macos_min_version:
 - '10.9'
-numpy:
-- '1.9'
-openblas:
-- 0.3.3
 pin_run_as_build:
-  boost-cpp:
-    max_pin: x.x.x
-  bzip2:
-    max_pin: x
-  openblas:
-    max_pin: x.x.x
   python:
     min_pin: x.x
     max_pin: x.x
-  sqlite:
-    max_pin: x
-  xz:
-    max_pin: x.x
 python:
 - '3.6'
-sqlite:
-- '3'
-xz:
-- '5.2'
