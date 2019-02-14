@@ -23,8 +23,10 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
   host:
+    - python
     - cyclus-build-deps
   run:
+    - python
     - cyclus-build-deps
 
 test:
