@@ -14,6 +14,8 @@ fi
 
 # Install Cyclus
 #export VERBOSE=1
+pwd
+ls -al
 ${PYTHON} install.py --prefix="${PREFIX}" \
   --build_type="Release" \
   --dont-allow-milps \
