@@ -14,8 +14,7 @@ fi
 
 # Install Cyclus
 #export VERBOSE=1
-pwd
-alias cpp=$CCP" 
+ln -s $CPP /opt/conda/bin/cpp
 ${PYTHON} install.py --prefix="${PREFIX}" \
   --build_type="Release" \
   --dont-allow-milps \
