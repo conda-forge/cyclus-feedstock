@@ -1,6 +1,5 @@
 {% set version = "1.5.3" %}
 {% set sha256 = "9371c460d446a07cf3b4deef2fd16319e575eba19d7fdee03f056a3fa217dd09" %}
-{% set variant = "openblas" %}
 
 package:
   name: cyclus
@@ -12,11 +11,10 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: 2
+  number: 3
   skip: True  # [win or py27 or py34 or (osx and py35)]
   detect_binary_files_with_prefix: true
   features:
-    - blas_{{ variant }}
 
 requirements:
   build:
@@ -25,13 +23,13 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
   host:
+    - libblas
+    - libcblas
     - python
     - cython
     - pandas
     - libxmlpp
     - coincbc
-    - blas 1.1 {{ variant }}
-    - openblas
     - boost-cpp
     - hdf5
     - sqlite
@@ -45,8 +43,6 @@ requirements:
     - python
     - libxmlpp
     - coincbc
-    - blas 1.1 {{ variant }}
-    - openblas
     - boost-cpp
     - hdf5
     - sqlite
