@@ -41,7 +41,7 @@ pin_run_as_build:
   xz:
     max_pin: x.x
 python:
-- '3.6'
+- '3.7'
 sqlite:
 - '3'
 xz:
