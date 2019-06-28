@@ -104,3 +104,13 @@ In order to produce a uniquely identifiable distribution:
  * If the version of a package **is** being increased, please remember to return
    the [``build/number``](http://conda.pydata.org/docs/building/meta-yaml.html#build-number-and-string)
    back to 0.
+
+
+Feedstock Maintainers
+=====================
+
+* [@FlanFlanagan](https://github.com/FlanFlanagan/)
+* [@bam241](https://github.com/bam241/)
+* [@gonuke](https://github.com/gonuke/)
+* [@scopatz](https://github.com/scopatz/)
+* [@katyhuff](https://github.com/katyhuff/)
