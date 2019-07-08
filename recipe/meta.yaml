@@ -12,7 +12,7 @@ source:
 
 build:
   number: 0
-  skip: True  # [win or py27]
+  skip: True  # [win]
   detect_binary_files_with_prefix: true
 
 requirements:
@@ -22,7 +22,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
   host:
-    - python <= 3.6
+    - python
     - glibmm
     - glib 2.56
     - jinja2
@@ -41,7 +41,7 @@ requirements:
     - gettext
     - xz
   run:
-    - python <= 3.6
+    - python
     - jinja2
     - pandas
     - glibmm
