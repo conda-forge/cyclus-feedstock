@@ -41,9 +41,9 @@ ${PREFIX}/bin/cyclus --nuc-data
 # run unit tests
 ${PREFIX}/bin/cyclus_unit_tests
 echo "CXX ${CXX}"
-export CC="${PREFIX}/bin/x86_64-conda_cos6-linux-gnu-gcc"
-export CXX="${PREFIX}/bin/x86_64-conda_cos6-linux-gnu-g++"
-export CPP="${PREFIX}/bin/x86_64-conda_cos6-linux-gnu-cpp"
+#export CC="${PREFIX}/bin/x86_64-conda_cos6-linux-gnu-gcc"
+#export CXX="${PREFIX}/bin/x86_64-conda_cos6-linux-gnu-g++"
+#export CPP="${PREFIX}/bin/x86_64-conda_cos6-linux-gnu-cpp"
 # run integration tests
 if [ "${UNAME}" == "Darwin" ]; then
   echo "skipping integration tests that take too long on mac"
