@@ -40,7 +40,7 @@ ${PREFIX}/bin/cyclus --nuc-data
 
 # run unit tests
 ${PREFIX}/bin/cyclus_unit_tests
-
+echo ${CXX}
 # run integration tests
 if [ "${UNAME}" == "Darwin" ]; then
   echo "skipping integration tests that take too long on mac"
