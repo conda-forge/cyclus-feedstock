@@ -28,7 +28,7 @@ requirements:
     - jinja2
     - pandas
     - cython 0.26
-    - coincbc 2.9.10
+    - {{ pin_compatible("coincbc", max_pin="2.9.10") }}
     - {{ pin_compatible("boost-cpp", max_pin="1.69.0") }}
     - libblas
     - libcblas
@@ -47,7 +47,7 @@ requirements:
     - glibmm
     - glib 2.56
     - libxmlpp
-    - coincbc 2.9.10
+    - {{ pin_compatible("coincbc", max_pin="2.9.10") }}
     - libblas
     - libcblas
     - liblapack
