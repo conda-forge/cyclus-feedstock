@@ -41,9 +41,6 @@ ${PREFIX}/bin/cyclus --nuc-data
 # run unit tests
 ${PREFIX}/bin/cyclus_unit_tests
 echo "CXX ${CXX}"
-which gcc
-which g++
-which cpp
 export CC="${PREFIX}/bin/x86_64-conda_cos6-linux-gnu-gcc"
 export CXX="${PREFIX}/bin/x86_64-conda_cos6-linux-gnu-g++"
 export CPP="${PREFIX}/bin/x86_64-conda_cos6-linux-gnu-cpp"
