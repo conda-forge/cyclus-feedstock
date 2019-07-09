@@ -41,6 +41,8 @@ requirements:
     - gettext
     - xz
   run:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
     - python
     - jinja2
     - pandas
