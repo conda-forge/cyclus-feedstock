@@ -29,7 +29,7 @@ requirements:
     - pandas
     - cython 0.26
     - coincbc 2.9
-    - boost-cpp <1.69
+    - {{ pin_compatible("boost-cpp", max_pin="1.69.0") }}
     - libblas
     - libcblas
     - liblapack
@@ -51,7 +51,7 @@ requirements:
     - libblas
     - libcblas
     - liblapack
-    - boost-cpp <1.69
+    - {{ pin_compatible("boost-cpp", max_pin="1.69.0") }}
     - hdf5
     - sqlite
     - pcre
