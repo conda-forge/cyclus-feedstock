@@ -41,8 +41,6 @@ requirements:
     - gettext
     - xz
   run:
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
     - python
     - jinja2
     - pandas
@@ -65,6 +63,8 @@ requirements:
 
 test:
   requires:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
     - setuptools
     - nose
     - pytables
