@@ -1,6 +1,8 @@
 #!/bin/sh
 # setup env for tests
 cd tests
+
+export PYTHONWARNINGS="ignore"
 export PATH="${PREFIX}/bin:${PATH}"
 export CYCLUS_PATH="${PREFIX}/lib/cyclus"
 if [ -z "$CYCLUS_NUC_DATA" ]; then
