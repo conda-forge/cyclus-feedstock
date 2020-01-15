@@ -1,5 +1,3 @@
-boost_cpp:
-- 1.70.0
 bzip2:
 - '1'
 c_compiler:
@@ -16,8 +14,6 @@ cxx_compiler_version:
 - '7'
 docker_image:
 - condaforge/linux-anvil-comp7
-glib:
-- '2.58'
 hdf5:
 - 1.10.5
 libblas:
@@ -27,8 +23,6 @@ libcblas:
 liblapack:
 - 3.8.0 *netlib
 pin_run_as_build:
-  boost-cpp:
-    max_pin: x.x.x
   bzip2:
     max_pin: x
   python:
@@ -44,4 +38,3 @@ sqlite:
 - '3'
 xz:
 - '5.2'
-
