@@ -12,7 +12,7 @@ source:
 
 build:
   number: 0
-  skip: True  # [win or py<=27 or py>=37]
+  skip: True  # [win or py<=27]
   detect_binary_files_with_prefix: true
 
 requirements:
@@ -29,12 +29,12 @@ requirements:
   host:
     - python
     - glibmm
-    - glib
+    - glib 2.56
     - jinja2
     - pandas
     - cython 0.26
     - coincbc <2.9.10
-    - boost-cpp
+    - boost-cpp <1.69
     - libblas
     - libcblas
     - liblapack
@@ -50,7 +50,7 @@ requirements:
     - jinja2
     - pandas
     - glibmm
-    - glib
+    - glib 2.56
     - libxmlpp
     - libblas
     - libcblas
