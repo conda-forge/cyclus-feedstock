@@ -1,5 +1,5 @@
-{% set version = "1.5.4" %}
-{% set sha256 = "57b4b68d81852d4c7350d3788cfeaf6093cb9cdf8dd524fe10ad33581f55e043" %}
+{% set version = "1.5.5" %}
+{% set sha256 = "1fdfd5019a0b423259d91d77c9c8969bc3c2be59a3a13731904331a3257ac05f" %}
 
 package:
   name: cyclus
@@ -14,7 +14,8 @@ build:
   number: 1
   skip: True  # [win or py<=27]
   detect_binary_files_with_prefix: true
-
+  preserve_egg_dir: True
+    
 requirements:
   build:
     - cmake
