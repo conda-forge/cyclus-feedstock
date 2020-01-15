@@ -29,10 +29,10 @@ requirements:
   host:
     - python
     - glibmm
-    - glib 2.56
+    - glib <2.56
     - jinja2
     - pandas
-    - cython 0.26
+    - cython 0.27
     - coincbc <2.9.10
     - boost-cpp <1.69
     - libblas
