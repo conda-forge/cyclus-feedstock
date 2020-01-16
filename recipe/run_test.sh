@@ -47,13 +47,13 @@ echo "CXX ${CXX}"
 # run integration tests
 export PYTHONWARNINGS="ignore"
 
-if [ "${UNAME}" == "Darwin" ]; then
-  echo "skipping integration tests that take too long on mac"
-else
+#if [ "${UNAME}" == "Darwin" ]; then
+#  echo "skipping integration tests that take too long on mac"
+#else
   nosetests cycpp_tests.py
   nosetests test_include_recipe.py
   nosetests test_null_sink.py test_source_to_sink.py
   nosetests test_trivial_cycle.py test_inventories.py
   nosetests test_minimal_cycle.py
   nosetests test_cycluslib.py
-fi
+#fi
