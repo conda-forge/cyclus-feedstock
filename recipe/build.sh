@@ -7,10 +7,15 @@ if [ "$(uname)" == "Darwin" ]; then
   export LDFLAGS="-rpath ${PREFIX}/lib ${LDFLAGS}"
   export LINKFLAGS="${LDFLAGS}"
   skiprpath="-DCMAKE_SKIP_RPATH=TRUE"
+  sed '340d' CMakeLists.txt > tmp
+  sed '341d' tmp > CMakeLists.txt
+  rm tmp
 else
   libext=".so"
   skiprpath=""
 fi
+
+
 
 # Install Cyclus
 #export VERBOSE=1
