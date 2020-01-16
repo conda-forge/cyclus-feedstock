@@ -46,7 +46,7 @@ requirements:
     - libblas
     - libcblas
     - liblapack
-    -{{ pin_compatible("coincbc", max_pin="x.x.x") }}
+    - {{ pin_compatible("coincbc", max_pin="x.x.x") }}
 
 test:
   requires:
