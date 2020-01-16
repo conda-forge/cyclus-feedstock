@@ -1,5 +1,5 @@
-{% set version = "1.5.4" %}
-{% set sha256 = "57b4b68d81852d4c7350d3788cfeaf6093cb9cdf8dd524fe10ad33581f55e043" %}
+{% set version = "1.5.5" %}
+{% set sha256 = "1fdfd5019a0b423259d91d77c9c8969bc3c2be59a3a13731904331a3257ac05f" %}
 
 package:
   name: cyclus
@@ -11,10 +11,11 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: 0
-  skip: True  # [win or py<=27 or py>=37]
+  number: 1
+  skip: True  # [win or py<=27]
   detect_binary_files_with_prefix: true
-
+  preserve_egg_dir: True
+    
 requirements:
   build:
     - cmake
@@ -27,19 +28,12 @@ requirements:
     - glib 2.56
     - jinja2
     - pandas
-    - cython 0.26
+    - cython  # [ not (py36 and osx) ]
+    - cython <0.28  # [ py36 and osx ]
     - coincbc <2.9.10
     - boost-cpp <1.69
-    - libblas
-    - libcblas
-    - liblapack
     - libxmlpp
-    - bzip2
     - hdf5
-    - sqlite
-    - pcre
-    - gettext
-    - xz
   run:
     - python
     - jinja2
@@ -63,6 +57,7 @@ requirements:
 
 test:
   requires:
+    - python
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - setuptools
