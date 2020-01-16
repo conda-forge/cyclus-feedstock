@@ -36,6 +36,17 @@ requirements:
     - hdf5
   run:
     - python
+    - sqlite
+    - hdf5
+    - libxmlpp
+    - pandas
+    - jinja2
+    - glibmm
+    - glib 2.56
+    - libblas
+    - libcblas
+    - liblapack
+    -{{ pin_compatible("coincbc", max_pin="x.x.x") }}
 
 test:
   requires:
