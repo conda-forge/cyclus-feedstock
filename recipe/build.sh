@@ -4,7 +4,7 @@ set -e
 if [ "$(uname)" == "Darwin" ]; then
   # other
   libext=".dylib"
-  export LDFLAGS="-rpath ${PREFIX}/lib ${LDFLAGS}"
+  #export LDFLAGS="-rpath ${PREFIX}/lib ${LDFLAGS}"
   export LINKFLAGS="${LDFLAGS}"
   skiprpath="-DCMAKE_SKIP_RPATH=TRUE"
 else
