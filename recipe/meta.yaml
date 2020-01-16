@@ -65,6 +65,7 @@ requirements:
 
 test:
   requires:
+    - python
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - setuptools
