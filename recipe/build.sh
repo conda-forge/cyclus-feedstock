@@ -6,7 +6,9 @@ if [ "$(uname)" == "Darwin" ]; then
   libext=".dylib"
   #export LDFLAGS="-rpath ${PREFIX}/lib ${LDFLAGS}"
   export LINKFLAGS="-t undefined dynamic_lookup ${LDFLAGS}"
-#skiprpath="-DCMAKE_SKIP_RPATH=TRUE"
+  echo "FUCK YOU!!!!!!!"
+  exit 1
+  #skiprpath="-DCMAKE_SKIP_RPATH=TRUE"
 else
   libext=".so"
   skiprpath=""
