@@ -28,7 +28,8 @@ requirements:
     - glib 2.56
     - jinja2
     - pandas
-    - cython <0.29
+    - cython <0.29  # [ not (py36 and osx) ]
+    - cython <0.28  # [ py36 and osx ]
     - coincbc <2.9.10
     - boost-cpp <1.69
     - libblas
