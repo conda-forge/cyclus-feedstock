@@ -36,6 +36,8 @@ requirements:
     - hdf5
   run:
     - python
+    - {{ pin_compatible("boost-cpp", max_pin="x.x.x") }}
+    - {{ pin_compatible("coincbc", max_pin="x.x.x") }}
     - sqlite
     - hdf5
     - libxmlpp
@@ -46,7 +48,6 @@ requirements:
     - libblas
     - libcblas
     - liblapack
-    - {{ pin_compatible("coincbc", max_pin="x.x.x") }}
 
 test:
   requires:
