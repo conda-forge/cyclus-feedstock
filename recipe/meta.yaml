@@ -50,12 +50,7 @@ requirements:
 
 test:
   requires:
-    - python
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
-    - setuptools
     - nose
-    - pytables
   source_files:
     - tests
 
