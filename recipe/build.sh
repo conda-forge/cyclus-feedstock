@@ -23,7 +23,7 @@ ${PYTHON} install.py --prefix="${PREFIX}" \
   --core-version="${PKG_VERSION}" \
   -DBLAS_LIBRARIES="-L${PREFIX}/lib -lopenblas" \
   -DLAPACK_LIBRARIES="-L${PREFIX}/lib -lopenblas" \
+  --dont-allow-milps \
   --clean -j "${CPU_COUNT}"
 #  ${skiprpath} \
-#  --dont-allow-milps \
 #  -DCMAKE_OSX_DEPLOYMENT_TARGET="${MACOSX_VERSION_MIN}" \
