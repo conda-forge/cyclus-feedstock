@@ -36,24 +36,6 @@ requirements:
     - hdf5
   run:
     - python
-    - jinja2
-    - pandas
-    - glibmm
-    - glib 2.56
-    - libxmlpp
-    - {{ pin_compatible("coincbc", max_pin="x.x.x") }}
-    - libblas
-    - libcblas
-    - liblapack
-    - {{ pin_compatible("boost-cpp", max_pin="x.x.x") }}
-    - hdf5
-    - sqlite
-    - pcre
-    - gettext
-    - bzip2
-    - xz
-    - websockets
-    - pprintpp
 
 test:
   requires:
