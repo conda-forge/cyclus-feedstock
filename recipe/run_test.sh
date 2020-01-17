@@ -1,18 +1,6 @@
 #!/bin/sh
 # setup env for tests
 cd tests
-#export PATH="${PREFIX}/bin:${PATH}"
-#export CYCLUS_PATH="${PREFIX}/lib/cyclus"
-#if [ -z "$CYCLUS_NUC_DATA" ]; then
-#  export CYCLUS_NUC_DATA="${PREFIX}/share/cyclus/cyclus_nuc_data.h5"
-#fi
-#
-#UNAME="$(uname)"
-#if [ "${UNAME}" == "Darwin" ]; then
-#  export DYLD_FALLBACK_LIBRARY_PATH="${PREFIX}/lib/cyclus:${PREFIX}/lib:${DYLD_FALLBACK_LIBRARY_PATH}"
-#else
-#  export LD_LIBRARY_PATH="${PREFIX}/lib/cyclus:${PREFIX}/lib:${LD_LIBRARY_PATH}"
-#fi
 
 # check that the files exist
 test -f ${PREFIX}/bin/cyclus
@@ -25,10 +13,7 @@ test -f ${PREFIX}/share/cyclus/dbtypes.json
 
 # output cyclus info
 which cyclus
-if [ "${UNAME}" == "Darwin" ]; then
-  #otool -l $(which cyclus)
-  otool -L $(which cyclus)
-fi
+
 ${PREFIX}/bin/cyclus --version
 ${PREFIX}/bin/cyclus --path
 ${PREFIX}/bin/cyclus --include
@@ -40,20 +25,13 @@ ${PREFIX}/bin/cyclus --nuc-data
 
 # run unit tests
 ${PREFIX}/bin/cyclus_unit_tests
-echo "CXX ${CXX}"
-#export CC="${PREFIX}/bin/x86_64-conda_cos6-linux-gnu-gcc"
-#export CXX="${PREFIX}/bin/x86_64-conda_cos6-linux-gnu-g++"
-#export CPP="${PREFIX}/bin/x86_64-conda_cos6-linux-gnu-cpp"
+
 # run integration tests
 export PYTHONWARNINGS="ignore"
 
-#if [ "${UNAME}" == "Darwin" ]; then
-#  echo "skipping integration tests that take too long on mac"
-#else
-  nosetests cycpp_tests.py
-  nosetests test_include_recipe.py
-  nosetests test_null_sink.py test_source_to_sink.py
-  nosetests test_trivial_cycle.py test_inventories.py
-  nosetests test_minimal_cycle.py
-  nosetests test_cycluslib.py
-#fi
+nosetests cycpp_tests.py
+nosetests test_include_recipe.py
+nosetests test_null_sink.py test_source_to_sink.py
+nosetests test_trivial_cycle.py test_inventories.py
+nosetests test_minimal_cycle.py
+nosetests test_cycluslib.py
