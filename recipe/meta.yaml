@@ -45,18 +45,15 @@ requirements:
     - libxml2
     - glibmm
     - glib 2.56
-      #    - libblas
-      #    - libcblas
-      #    - liblapack
     - pandas
     - jinja2
+    - pytables
 
 test:
   requires:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - nose
-    - pytables
   source_files:
     - tests
 
