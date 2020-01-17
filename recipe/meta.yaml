@@ -56,6 +56,7 @@ test:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - nose
+    - pytables
   source_files:
     - tests
 
