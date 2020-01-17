@@ -26,6 +26,7 @@ requirements:
     - coincbc <2.9.10
     - boost-cpp <1.69
     - libxmlpp
+    - libxml2
     - hdf5
     - glibmm
     - glib 2.56
@@ -41,6 +42,7 @@ requirements:
     - sqlite
     - hdf5
     - libxmlpp
+    - libxml2
     - glibmm
     - glib 2.56
       #    - libblas
