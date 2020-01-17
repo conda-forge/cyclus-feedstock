@@ -23,17 +23,17 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
   host:
-    - python
-    - glibmm
-    - glib 2.56
-    - jinja2
-    - pandas
-    - cython  # [ not (py36 and osx) ]
-    - cython <0.28  # [ py36 and osx ]
     - coincbc <2.9.10
     - boost-cpp <1.69
     - libxmlpp
     - hdf5
+    - glibmm
+    - glib 2.56
+    - python
+    - jinja2
+    - pandas
+    - cython  # [ not (py36 and osx) ]
+    - cython <0.28  # [ py36 and osx ]
   run:
     - python
     - {{ pin_compatible("boost-cpp", max_pin="x.x.x") }}
@@ -41,16 +41,18 @@ requirements:
     - sqlite
     - hdf5
     - libxmlpp
-    - pandas
-    - jinja2
     - glibmm
     - glib 2.56
-    - libblas
-    - libcblas
-    - liblapack
+      #    - libblas
+      #    - libcblas
+      #    - liblapack
+    - pandas
+    - jinja2
 
 test:
   requires:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
     - nose
   source_files:
     - tests
