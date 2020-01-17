@@ -12,8 +12,6 @@ else
   skiprpath=""
 fi
 
-
-
 # Install Cyclus
 #export VERBOSE=1
 ${PYTHON} install.py --prefix="${PREFIX}" \
