@@ -172,4 +172,5 @@ Feedstock Maintainers
 * [@gonuke](https://github.com/gonuke/)
 * [@katyhuff](https://github.com/katyhuff/)
 * [@scopatz](https://github.com/scopatz/)
+* [@stompsjo](https://github.com/stompsjo/)
 
