@@ -1,4 +1,4 @@
-migrator_ts: 1582183745
+migrator_ts: 1
 __migrator:
   kind:
     version
@@ -6,6 +6,8 @@ __migrator:
     1
   build_number:
     1
-boost_cpp:
-  - 1.72
 
+glib:
+  - 2.64.6
+libglib:
+  - 2.64.6
