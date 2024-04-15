@@ -16,11 +16,6 @@ fi
 #export VERBOSE=1
 ${PYTHON} install.py --prefix="${PREFIX}" \
   --build_type="Release" \
-  --dont-allow-milps \
-  --deps-root="${PREFIX}" \
-  --core-version="${PKG_VERSION}" \
-  -DCMAKE_OSX_DEPLOYMENT_TARGET="${MACOSX_VERSION_MIN}" \
-  -DBLAS_LIBRARIES="-L${PREFIX}/lib -lopenblas" \
-  -DLAPACK_LIBRARIES="-L${PREFIX}/lib -lopenblas" \
+  --allow-milps \
   ${skiprpath} \
-  --clean -j "${CPU_COUNT}"
+  --clean-build -j "${CPU_COUNT}"

@@ -1,13 +1,13 @@
 {% set version = "1.5.5" %}
-{% set sha256 = "1fdfd5019a0b423259d91d77c9c8969bc3c2be59a3a13731904331a3257ac05f" %}
+{% set sha256 = "167F972DC7F0B21E2C10138F5A8DDEEE0B446CC33935CE20905AE40356B682EC" %}
 
 package:
   name: cyclus
   version: {{ version }}
 
 source:
-  fn: cyclus-{{ version }}-{{ sha256 }}.tar.gz
-  url: https://github.com/cyclus/cyclus/archive/{{ version }}.tar.gz
+  fn: cyclus-{{ version }}-{{ sha256 }}.zip
+  url: https://github.com/cyclus/cyclus/archive/ecc59260649705d72b4d9f5151911a0efbbd9202.zip
   sha256: {{ sha256 }}
 
 build:
@@ -23,37 +23,39 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
   host:
-    - coincbc <2.9.10
-    - boost-cpp <1.69
-    - libxmlpp
+    - coincbc
+    - boost-cpp
+    - libxmlpp-4.0
     - libxml2
+    - liblapack
     - hdf5
-    - glibmm
-    - glib 2.56
-    - python
+    - glib
+    - python-dev
     - jinja2
     - pandas
-    - cython  # [ not (py36 and osx) ]
-    - cython <0.28  # [ py36 and osx ]
+    - cython
+    - pip
+    - setuptools
   run:
-    - python
-    - {{ pin_compatible("boost-cpp", max_pin="x.x.x") }}
-    - {{ pin_compatible("coincbc", max_pin="x.x.x") }}
+    - python-dev
+    - boost-cpp
+    - coincbc
     - sqlite
     - hdf5
-    - libxmlpp
+    - libxmlpp-4.0
     - libxml2
-    - glibmm
-    - glib 2.56
+    - liblapack
+    - glib
     - pandas
     - jinja2
     - pytables
+    - pprintpp
 
 test:
   requires:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - nose
+    - pytest
   source_files:
     - tests
 
@@ -71,3 +73,4 @@ extra:
     - katyhuff
     - FlanFlanagan
     - stompsjo
+    - bennibbelink
