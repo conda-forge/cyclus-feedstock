@@ -1,5 +1,5 @@
 {% set version = "1.5.5" %}
-{% set sha256 = "167F972DC7F0B21E2C10138F5A8DDEEE0B446CC33935CE20905AE40356B682EC" %}
+{% set sha256 = "e800b637aab5ab96eb940eb34467833b4b2fa6bc49c5704e71f9af8729eb382f" %}
 
 package:
   name: cyclus
@@ -11,7 +11,7 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: 2
+  number: 0
   skip: True  # [win or osx or py<=27]
   detect_binary_files_with_prefix: true
   preserve_egg_dir: True
@@ -19,35 +19,53 @@ build:
 requirements:
   build:
     - cmake
+    - make
     - pkg-config
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - coincbc
+    - boost-cpp
+    - libxmlpp-4.0
+    - libxml2
+    - liblapack
+    - hdf5
+    - sqlite
+    - glib
+    - python
+    - pandas
+    - jinja2
+    - cython
+    - pip
+    - setuptools
   host:
     - coincbc
     - boost-cpp
     - libxmlpp-4.0
     - libxml2
     - liblapack
+    - blis
     - hdf5
-    - glib
-    - python-dev
-    - jinja2
-    - pandas
-    - cython
-    - pip
-    - setuptools
-  run:
-    - python-dev
-    - boost-cpp
-    - coincbc
     - sqlite
-    - hdf5
+    - glib
+    - python
+    - pandas
+    - python
+    - pytables
+    - pprintpp
+    - cython
+  run:
+    - coincbc
+    - boost-cpp
     - libxmlpp-4.0
     - libxml2
     - liblapack
+    - blis
+    - hdf5
+    - sqlite
     - glib
+    - python
     - pandas
-    - jinja2
+    - python
     - pytables
     - pprintpp
 

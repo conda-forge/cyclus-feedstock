@@ -18,4 +18,6 @@ ${PYTHON} install.py --prefix="${PREFIX}" \
   --build_type="Release" \
   --allow-milps \
   ${skiprpath} \
+  -DCMAKE_C_COMPILER=${GCC} \
+  -DCMAKE_CXX_COMPILER=${CXX} \
   --clean-build -j "${CPU_COUNT}"

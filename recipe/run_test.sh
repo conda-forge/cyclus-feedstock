@@ -23,6 +23,9 @@ ${PREFIX}/bin/cyclus --build-path
 ${PREFIX}/bin/cyclus --rng-schema
 ${PREFIX}/bin/cyclus --nuc-data
 
+export LD_LIBRARY_PATH=${PREFIX}/lib:${PREFIX}/lib/cyclus
+export PYTHONPATH=${SP_DIR}
+
 # run unit tests
 ${PREFIX}/bin/cyclus_unit_tests
 
