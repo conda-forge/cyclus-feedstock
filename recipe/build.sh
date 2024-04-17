@@ -22,6 +22,3 @@ ${PYTHON} install.py --prefix="${PREFIX}" \
   -DCMAKE_CXX_COMPILER=${CXX} \
   -DPYTHON_SITE_PACKAGES="${SP_DIR}" \
   --clean-build -j "${CPU_COUNT}"
-
-cp ${SRC_DIR}/src/hdf5_back_gen.py ${SP_DIR}/hdf5_back_gen.py
-cp ${SRC_DIR}/build/cyclus/cycpp.py ${SP_DIR}/cycpp.py
