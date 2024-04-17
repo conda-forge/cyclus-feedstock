@@ -21,4 +21,4 @@ ${PYTHON} install.py --prefix="${PREFIX}" \
   -DCMAKE_C_COMPILER=${GCC} \
   -DCMAKE_CXX_COMPILER=${CXX} \
   -DPYTHON_SITE_PACKAGES="${SP_DIR}" \
-  --clean-build -j "${CPU_COUNT}"
+  -j "${CPU_COUNT}"
