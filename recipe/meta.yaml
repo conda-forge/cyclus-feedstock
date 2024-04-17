@@ -24,7 +24,7 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - coincbc
-    - boost-cpp
+    - libboost-devel
     - libxmlpp-4.0
     - libxml2
     - liblapack
@@ -39,7 +39,7 @@ requirements:
     - setuptools
   host:
     - coincbc
-    - boost-cpp
+    - libboost-devel
     - libxmlpp-4.0
     - libxml2
     - liblapack
@@ -54,7 +54,7 @@ requirements:
     - cython
   run:
     - coincbc
-    - boost-cpp
+    - libboost-devel
     - libxmlpp-4.0
     - libxml2
     - liblapack
