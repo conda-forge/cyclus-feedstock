@@ -30,13 +30,10 @@ ls ${SP_DIR}
 echo here3
 ls ${SP_DIR}/cyclus
 
-export LD_LIBRARY_PATH="${PREFIX}/lib:${PREFIX}/lib/cyclus:${SP_DIR}"
-export PYTHONPATH="${SP_DIR}"
-
 # run unit tests
 ${PREFIX}/bin/cyclus_unit_tests
 
 # run integration tests
 export PYTHONWARNINGS="ignore"
 
-python -m pytest --ignore hdf5_back_gen_test.py --ignore test_hdf5_back_gen.py
+python -m pytest

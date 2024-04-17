@@ -1,5 +1,5 @@
 {% set version = "1.5.5" %}
-{% set sha256 = "fba779b9973f3546448cf787a19b68fe33c489ad4895a6e1030f0b685c4a26d1" %}
+{% set sha256 = "e6628c1e91378f22a5b395f8901248b8459fc6a0efdbed60ce368066a5a28525" %}
 
 package:
   name: cyclus
@@ -7,7 +7,7 @@ package:
 
 source:
   fn: cyclus-{{ version }}-{{ sha256 }}.zip
-  url: https://github.com/bennibbelink/cyclus/archive/refs/heads/rpath-origin.zip
+  url: https://github.com/bennibbelink/cyclus/archive/refs/heads/pyinstall-cmake.zip
   sha256: {{ sha256 }}
 
 build:
@@ -75,6 +75,7 @@ test:
     - pytables
   source_files:
     - tests
+    - share/dbtypes.json
 
 about:
   home: http://fuelcycle.org/
@@ -90,4 +91,3 @@ extra:
     - katyhuff
     - FlanFlanagan
     - stompsjo
-    - bennibbelink

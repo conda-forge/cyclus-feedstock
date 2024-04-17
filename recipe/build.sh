@@ -20,14 +20,8 @@ ${PYTHON} install.py --prefix="${PREFIX}" \
   ${skiprpath} \
   -DCMAKE_C_COMPILER=${GCC} \
   -DCMAKE_CXX_COMPILER=${CXX} \
-  -Dsite_packages="\${SP_DIR}" \
-  --clean-build -j 4 #"${CPU_COUNT}"
+  -DPYTHON_SITE_PACKAGES="${SP_DIR}" \
+  --clean-build -j "${CPU_COUNT}"
 
-mkdir ${SP_DIR}/cyclus
-cp ${SRC_DIR}/build/cyclus/*.py ${SP_DIR}/cyclus/
-cp ${SRC_DIR}/build/cyclus/*.so ${SP_DIR}/cyclus/
-cp ${SRC_DIR}/build/lib/eventhooks.so ${SP_DIR}/eventhooks.so
-cp ${SRC_DIR}/build/lib/pyinfile.so ${SP_DIR}/pyinfile.so
-cp ${SRC_DIR}/build/lib/pymodule.so ${SP_DIR}/pymodule.so
 cp ${SRC_DIR}/src/hdf5_back_gen.py ${SP_DIR}/hdf5_back_gen.py
 cp ${SRC_DIR}/build/cyclus/cycpp.py ${SP_DIR}/cycpp.py
