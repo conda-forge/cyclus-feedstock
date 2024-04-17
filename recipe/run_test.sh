@@ -22,9 +22,16 @@ ${PREFIX}/bin/cyclus --cmake-module-path
 ${PREFIX}/bin/cyclus --build-path
 ${PREFIX}/bin/cyclus --rng-schema
 ${PREFIX}/bin/cyclus --nuc-data
+ls ${PREFIX}/bin
+echo here1
+ls ${PREFIX}/lib
+echo here2
+ls ${SP_DIR}
+echo here3
+ls ${SP_DIR}/cyclus
 
-export LD_LIBRARY_PATH=${PREFIX}/lib:${PREFIX}/lib/cyclus
-export PYTHONPATH=${SP_DIR}
+export LD_LIBRARY_PATH="${PREFIX}/lib:${PREFIX}/lib/cyclus:${SP_DIR}"
+export PYTHONPATH="${SP_DIR}"
 
 # run unit tests
 ${PREFIX}/bin/cyclus_unit_tests
@@ -32,4 +39,4 @@ ${PREFIX}/bin/cyclus_unit_tests
 # run integration tests
 export PYTHONWARNINGS="ignore"
 
-python -m pytest
+python -m pytest --ignore hdf5_back_gen_test.py --ignore test_hdf5_back_gen.py

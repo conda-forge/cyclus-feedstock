@@ -1,5 +1,5 @@
 {% set version = "1.5.5" %}
-{% set sha256 = "e800b637aab5ab96eb940eb34467833b4b2fa6bc49c5704e71f9af8729eb382f" %}
+{% set sha256 = "fba779b9973f3546448cf787a19b68fe33c489ad4895a6e1030f0b685c4a26d1" %}
 
 package:
   name: cyclus
@@ -7,7 +7,7 @@ package:
 
 source:
   fn: cyclus-{{ version }}-{{ sha256 }}.zip
-  url: https://github.com/cyclus/cyclus/archive/ecc59260649705d72b4d9f5151911a0efbbd9202.zip
+  url: https://github.com/bennibbelink/cyclus/archive/refs/heads/rpath-origin.zip
   sha256: {{ sha256 }}
 
 build:
@@ -50,7 +50,6 @@ requirements:
     - python
     - pandas
     - python
-    - pytables
     - pprintpp
     - cython
   run:
@@ -66,7 +65,6 @@ requirements:
     - python
     - pandas
     - python
-    - pytables
     - pprintpp
 
 test:
@@ -74,6 +72,7 @@ test:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - pytest
+    - pytables
   source_files:
     - tests
 
