@@ -1,5 +1,4 @@
-{% set version = "1.5.5" %}
-{% set sha256 = "20d9451f59a608e70c93a21c22bc3081f9a1982d90ab50c2effb17fc5cbde577" %}
+{% set version = "1.6.0" %}
 
 package:
   name: cyclus
