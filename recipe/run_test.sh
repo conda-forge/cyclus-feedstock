@@ -1,6 +1,4 @@
 #!/bin/sh
-# setup env for tests
-cd tests
 
 # check that the files exist
 test -f ${PREFIX}/bin/cyclus
@@ -26,4 +24,5 @@ ${PREFIX}/bin/cyclus --nuc-data
 # run unit tests
 ${PREFIX}/bin/cyclus_unit_tests
 
-python -m pytest
+cd tests
+${PYTHON} -m pytest
