@@ -19,6 +19,7 @@ requirements:
     - cmake
     - make
     - pkg-config
+    - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - coincbc
@@ -78,7 +79,7 @@ test:
 
 about:
   home: http://fuelcycle.org/
-  license: BSD-3-clause
+  license: BSD-3-Clause
   license_file: LICENSE.rst
   summary: "The agent-based fuel cycle simulator."
 
