@@ -25,7 +25,7 @@ glib:
 hdf5:
 - 1.14.3
 libboost_devel:
-- '1.82'
+- '1.84'
 liblapack:
 - 3.9 *netlib
 libxml2:
