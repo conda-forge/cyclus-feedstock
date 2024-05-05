@@ -5,7 +5,7 @@ Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/cyclus-feedstoc
 
 Home: http://fuelcycle.org/
 
-Package license: BSD-3-clause
+Package license: BSD-3-Clause
 
 Summary: The agent-based fuel cycle simulator.
 
@@ -45,6 +45,13 @@ Current build status
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=18&branchName=main">
                   <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/cyclus-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_python3.8.____cpython" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_64_python3.9.____73_pypy</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=18&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/cyclus-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_python3.9.____73_pypy" alt="variant">
                 </a>
               </td>
             </tr><tr>
@@ -185,6 +192,7 @@ Feedstock Maintainers
 
 * [@FlanFlanagan](https://github.com/FlanFlanagan/)
 * [@bam241](https://github.com/bam241/)
+* [@bennibbelink](https://github.com/bennibbelink/)
 * [@gonuke](https://github.com/gonuke/)
 * [@katyhuff](https://github.com/katyhuff/)
 * [@scopatz](https://github.com/scopatz/)
