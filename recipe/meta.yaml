@@ -9,7 +9,7 @@ source:
   git_rev: 1.6.0
 
 build:
-  number: 0
+  number: 1
   skip: True  # [win or osx or py<=27]
   detect_binary_files_with_prefix: true
   preserve_egg_dir: True
@@ -21,6 +21,7 @@ requirements:
     - pkg-config
     - {{ stdlib('c') }}
     - {{ compiler('c') }}
+    - {{ stdlib("c") }}
     - {{ compiler('cxx') }}
     - coincbc
     - libboost-devel
