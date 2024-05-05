@@ -5,7 +5,7 @@ Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/cyclus-feedstoc
 
 Home: http://fuelcycle.org/
 
-Package license: BSD-3-clause
+Package license: BSD-3-Clause
 
 Summary: The agent-based fuel cycle simulator.
 
@@ -185,6 +185,7 @@ Feedstock Maintainers
 
 * [@FlanFlanagan](https://github.com/FlanFlanagan/)
 * [@bam241](https://github.com/bam241/)
+* [@bennibbelink](https://github.com/bennibbelink/)
 * [@gonuke](https://github.com/gonuke/)
 * [@katyhuff](https://github.com/katyhuff/)
 * [@scopatz](https://github.com/scopatz/)
