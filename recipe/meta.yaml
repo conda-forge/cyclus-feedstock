@@ -23,17 +23,18 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
   host:
-    - coin-or-cbc
-    - libboost-devel
-    - libxmlpp-4.0
-    - libxml2
-    - liblapack
-    - blis
-    - hdf5
-    - sqlite
-    - glib
     - python
     - cython
+    # C/C++ libraries
+    - blis
+    - coin-or-cbc
+    - glib
+    - hdf5
+    - libboost-devel
+    - liblapack
+    - libxmlpp-4.0
+    - libxml2
+    - sqlite
   run:
     - python
     - blis
