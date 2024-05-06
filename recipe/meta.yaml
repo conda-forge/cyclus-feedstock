@@ -9,7 +9,7 @@ source:
   git_rev: 1.6.0
 
 build:
-  number: 2
+  number: 3
   skip: True  # [win or osx or py<=27]
   detect_binary_files_with_prefix: true
   preserve_egg_dir: True
@@ -22,22 +22,8 @@ requirements:
     - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - coincbc
-    - libboost-devel
-    - libxmlpp-4.0
-    - libxml2
-    - liblapack
-    - hdf5
-    - sqlite
-    - glib
-    - python
-    - pandas
-    - jinja2
-    - cython
-    - pip
-    - setuptools
   host:
-    - coincbc
+    - coin-or-cbc
     - libboost-devel
     - libxmlpp-4.0
     - libxml2
@@ -47,24 +33,11 @@ requirements:
     - sqlite
     - glib
     - python
-    - pandas
-    - python
-    - pprintpp
     - cython
   run:
-    - coincbc
-    - libboost-devel
-    - libxmlpp-4.0
-    - libxml2
-    - liblapack
+    - python
     - blis
-    - hdf5
-    - sqlite
-    - glib
-    - python
     - pandas
-    - python
-    - pprintpp
 
 test:
   requires:
