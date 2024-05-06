@@ -1,14 +1,12 @@
-{% set version = "1.5.5" %}
-{% set sha256 = "1fdfd5019a0b423259d91d77c9c8969bc3c2be59a3a13731904331a3257ac05f" %}
+{% set version = "1.6.0" %}
 
 package:
   name: cyclus
   version: {{ version }}
 
 source:
-  fn: cyclus-{{ version }}-{{ sha256 }}.tar.gz
-  url: https://github.com/cyclus/cyclus/archive/{{ version }}.tar.gz
-  sha256: {{ sha256 }}
+  git_url: https://github.com/cyclus/cyclus.git
+  git_rev: 1.6.0
 
 build:
   number: 3
@@ -19,47 +17,69 @@ build:
 requirements:
   build:
     - cmake
+    - make
     - pkg-config
+    - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-  host:
-    - coincbc <2.9.10
-    - boost-cpp <1.69
-    - libxmlpp
+    - coincbc
+    - libboost-devel
+    - libxmlpp-4.0
     - libxml2
+    - liblapack
     - hdf5
-    - glibmm
-    - glib 2.56
-    - python
-    - jinja2
-    - pandas
-    - cython  # [ not (py36 and osx) ]
-    - cython <0.28  # [ py36 and osx ]
-  run:
-    - python
-    - {{ pin_compatible("boost-cpp", max_pin="x.x.x") }}
-    - {{ pin_compatible("coincbc", max_pin="x.x.x") }}
     - sqlite
-    - hdf5
-    - libxmlpp
-    - libxml2
-    - glibmm
-    - glib 2.56
+    - glib
+    - python
     - pandas
     - jinja2
-    - pytables
+    - cython
+    - pip
+    - setuptools
+  host:
+    - coincbc
+    - libboost-devel
+    - libxmlpp-4.0
+    - libxml2
+    - liblapack
+    - blis
+    - hdf5
+    - sqlite
+    - glib
+    - python
+    - pandas
+    - python
+    - pprintpp
+    - cython
+  run:
+    - coincbc
+    - libboost-devel
+    - libxmlpp-4.0
+    - libxml2
+    - liblapack
+    - blis
+    - hdf5
+    - sqlite
+    - glib
+    - python
+    - pandas
+    - python
+    - pprintpp
 
 test:
   requires:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - nose
+    - pytest
+    - pytables
   source_files:
     - tests
+    - share/dbtypes.json
+    - src/hdf5_back_gen.py
 
 about:
   home: http://fuelcycle.org/
-  license: BSD 3-clause
+  license: BSD-3-Clause
   license_file: LICENSE.rst
   summary: "The agent-based fuel cycle simulator."
 
@@ -71,3 +91,4 @@ extra:
     - katyhuff
     - FlanFlanagan
     - stompsjo
+    - bennibbelink
