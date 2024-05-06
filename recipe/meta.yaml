@@ -27,14 +27,24 @@ requirements:
     - cython
     # C/C++ libraries
     - blis
+    - bzip2
     - coin-or-cbc
+    - coin-or-cgl
+    - coin-or-clp
+    - coin-or-osi
+    - coin-or-utils
     - glib
+    - glibmm
     - hdf5
+    - icu
     - libboost-devel
+    - libiconv
     - liblapack
     - libxmlpp-4.0
     - libxml2
+    - sigcpp-3.0
     - sqlite
+    - zlib
   run:
     - python
     - blis
