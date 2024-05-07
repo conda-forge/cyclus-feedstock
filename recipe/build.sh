@@ -16,10 +16,10 @@ fi
 #export VERBOSE=1
 ${PYTHON} install.py \
   --prefix="${PREFIX}" \
-  --cmake-prefix-path="${PREFIX}" \
-  --boost-root="${PREFIX}" \
+  --cmake_prefix_path="${PREFIX}" \
+  --boost_root="${PREFIX}" \
   --coin-root="${PREFIX}" \
-  --hdf5-root="${PREFIX}" \
+  --hdf5_root="${PREFIX}" \
   --allow-milps \
   ${skiprpath} \
   -DCMAKE_C_COMPILER=${GCC} \
