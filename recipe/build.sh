@@ -22,6 +22,7 @@ ${PYTHON} install.py \
   ${skiprpath} \
   -DCMAKE_C_COMPILER=${GCC} \
   -DCMAKE_CXX_COMPILER=${CXX} \
+  -DCMAKE_LIBRARY_PATH="${PREFIX}/lib" \
   -DCMAKE_MODULE_PATH="${PREFIX}/lib/cmake" \
   -DPYTHON_SITE_PACKAGES="${SP_DIR}" \
   -j "${CPU_COUNT}"
