@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 if [ "$(uname)" == "Darwin" ]; then
   # other
@@ -11,6 +11,9 @@ else
   libext=".so"
   skiprpath=""
 fi
+
+# ensure we find our libraries
+export LD_LIBRARY_PATH="${PREFIX}/lib/:${LD_LIBRARY_PATH}"
 
 # Install Cyclus
 #export VERBOSE=1
