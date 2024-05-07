@@ -24,8 +24,11 @@ requirements:
     - {{ compiler('cxx') }}
   host:
     - python
-    - numpy
+    - pip
+    - setuptools
     - cython
+    - numpy
+    - jinja2
     # C/C++ libraries
     - blis
     - bzip2
