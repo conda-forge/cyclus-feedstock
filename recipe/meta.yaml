@@ -28,6 +28,7 @@ requirements:
     - setuptools
     - cython
     - numpy
+    - pandas
     - jinja2
     # C/C++ libraries
     - blis
