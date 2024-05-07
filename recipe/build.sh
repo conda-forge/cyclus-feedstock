@@ -17,9 +17,7 @@ fi
 ${PYTHON} install.py \
   --prefix="${PREFIX}" \
   --cmake_prefix_path="${PREFIX}" \
-  --boost_root="${PREFIX}" \
-  --coin-root="${PREFIX}" \
-  --hdf5_root="${PREFIX}" \
+  --deps_root="${PREFIX}" \
   --allow-milps \
   ${skiprpath} \
   -DCMAKE_C_COMPILER=${GCC} \
