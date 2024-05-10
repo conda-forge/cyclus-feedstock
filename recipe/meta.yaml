@@ -52,7 +52,6 @@ requirements:
     - zlib
   run:
     - python
-    - numpy
     - blis
     - pandas
 
