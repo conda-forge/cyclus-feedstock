@@ -42,17 +42,21 @@ requirements:
     - glibmm
     - hdf5
     - icu
+    - libaec
     - libboost-devel
+    - libcurl
     - libiconv
     - liblapack
     - libxmlpp-4.0
     - libxml2
+    - openssl
     - sigcpp-3.0
     - sqlite
     - zlib
   run:
     - python
     - blis
+    - libgfortran5
     - pandas
 
 
