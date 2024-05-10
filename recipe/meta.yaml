@@ -9,7 +9,7 @@ source:
   git_rev: 1.6.0
 
 build:
-  number: 2
+  number: 3
   skip: True  # [win or osx or py<=27]
   detect_binary_files_with_prefix: true
   preserve_egg_dir: True
@@ -85,10 +85,9 @@ about:
 
 extra:
   recipe-maintainers:
-    - scopatz
     - gonuke
-    - bam241
     - katyhuff
     - FlanFlanagan
-    - stompsjo
     - bennibbelink
+    - munkm
+    - abachma2
