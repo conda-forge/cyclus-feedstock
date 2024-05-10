@@ -22,20 +22,6 @@ requirements:
     - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    # - coincbc
-    # - libboost-devel
-    # - libxmlpp-4.0
-    # - libxml2
-    # - liblapack
-    # - hdf5
-    # - sqlite
-    # - glib
-    # - python
-    # - pandas
-    # - jinja2
-    # - cython
-    # - pip
-    # - setuptools
   host:
     - python
     - pip
@@ -66,6 +52,7 @@ requirements:
     - zlib
   run:
     - python
+    - numpy
     - blis
     - pandas
 
