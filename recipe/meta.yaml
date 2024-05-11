@@ -56,7 +56,6 @@ requirements:
   run:
     - python
     - blis
-    - libgfortran5
     - pandas
 
 
