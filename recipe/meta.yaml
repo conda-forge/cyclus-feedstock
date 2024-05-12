@@ -21,6 +21,7 @@ requirements:
     - pkg-config
     - {{ stdlib('c') }}
     - {{ compiler('c') }}
+    - {{ stdlib("c") }}
     - {{ compiler('cxx') }}
     - coincbc
     - libboost-devel
