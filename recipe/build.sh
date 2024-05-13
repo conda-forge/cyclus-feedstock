@@ -14,7 +14,8 @@ fi
 
 # Install Cyclus
 #export VERBOSE=1
-${PYTHON} install.py --prefix="${PREFIX}" \
+${PYTHON} install.py \
+  --prefix="${PREFIX}" \
   --allow-milps \
   ${skiprpath} \
   -DCMAKE_C_COMPILER=${GCC} \
