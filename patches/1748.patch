@@ -1,0 +1,816 @@
+diff --git a/CHANGELOG.rst b/CHANGELOG.rst
+index c4b687b3..cd197cfb 100644
+--- a/CHANGELOG.rst
++++ b/CHANGELOG.rst
+@@ -9,6 +9,11 @@ Since last release
+ 
+ **Changed:**
+ 
++* Changed README.rst installation instructions, tested on fresh Ubuntu-22.04 system with Python3.11 (#1744)
++* Rely on ``python3`` in environment instead of ``python`` (#1747)
++* Remove ``pandas`` as build dependency (#1748)
++* Consistently use hyphens in ``install.py`` flags (#1748)
++
+ **Removed:**
+ 
+ **Fixed:**
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dbc00771..ad06f2a3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -175,15 +175,16 @@ IF(NOT CYCLUS_DOC_ONLY)
+ 
+     FIND_PACKAGE(LibXml2 REQUIRED)
+     ADD_DEFINITIONS(${LIBXML2_DEFINITIONS})
+-    SET(LIBS ${LIBS} ${LIBXML2_LIBRARIES})
++    SET(LIBS ${LIBS} LibXml2::LibXml2)
+     message("-- LibXML2 Include Dir: ${LIBXML2_INCLUDE_DIR}")
++    message("-- LibXML2 Libraries: ${LIBXML2_LIBRARIES}")
+ 
+     # Then use pkg-config for locate specific package
+     pkg_check_modules(LIBXMLXX IMPORTED_TARGET libxml++-4.0)
+-    IF ( NOT LIBXMLXX_LIBRARIES )
++    IF ( NOT LIBXMLXX_FOUND )
+        pkg_check_modules(LIBXMLXX REQUIRED IMPORTED_TARGET libxml++-2.6)
+-    ENDIF ( NOT LIBXMLXX_LIBRARIES )
+-    SET(LIBS ${LIBS} ${LIBXMLXX_LIBRARIES})
++    ENDIF ( NOT LIBXMLXX_FOUND )
++    SET(LIBS ${LIBS} PkgConfig::LIBXMLXX)
+     message("-- LibXML++ Include Dir: ${LIBXMLXX_INCLUDE_DIRS}")
+     message("-- LibXML++ Libraries: ${LIBXMLXX_LIBRARIES}")
+     
+@@ -261,11 +262,11 @@ IF(NOT CYCLUS_DOC_ONLY)
+     ENDIF(GFORTRAN_LIBRARIES)
+ 
+     # openblas
+-    FIND_LIBRARY(OPENBLAS_LIBRARIES openblas ${DEPS_LIB_HINTS})
+-    MESSAGE("-- Found OPENBLAS Libraries (optional): ${OPENBLAS_LIBRARIES}")
+-    IF(OPENBLAS_LIBRARIES)
+-        set(LIBS ${LIBS} ${OPENBLAS_LIBRARIES})
+-    ENDIF(OPENBLAS_LIBRARIES)
++    FIND_LIBRARY(BLAS_LIBRARIES blas ${DEPS_LIB_HINTS})
++    MESSAGE("-- Found BLAS Libraries (optional): ${BLAS_LIBRARIES}")
++    IF(BLAS_FOUND)
++        set(LIBS ${LIBS} ${BLAS_LIBRARIES})
++    ENDIF(BLAS_FOUND)
+ 
+     # ClpSolver
+     FIND_LIBRARY(CLPSOLVER_LIBRARIES ClpSolver ${DEPS_LIB_HINTS})
+@@ -331,7 +332,6 @@ IF(NOT CYCLUS_DOC_ONLY)
+         include(UseCython)
+         find_package (Python3 REQUIRED COMPONENTS NumPy)
+         find_package(Jinja2 REQUIRED)
+-        find_package(Pandas REQUIRED)
+ 
+         # With CMake, a clean separation can be made between the source tree and the
+         # build tree.  When all source is compiled, as with pure C/C++, the source is
+diff --git a/INSTALL.rst b/INSTALL.rst
+index ca1c3690..818f4108 100644
+--- a/INSTALL.rst
++++ b/INSTALL.rst
+@@ -31,7 +31,7 @@ Run the install script:
+ 
+ .. code-block:: bash
+   
+-  python install.py
++  python3 install.py
+ 
+ If you successfully followed the instruction above, the cyclus binary has been
+ generated and placed in the  ``~/.local/`` in your home directory. 
+@@ -47,7 +47,7 @@ On MacOSX you also need to add ~/.local/lib/pythonX.Y/site-packages to your
+ 
+ .. code-block:: bash
+ 
+-  echo "export PYTHONPATH=\"\$HOME/.local/lib/python`python -c 'import sys; \
++  echo "export PYTHONPATH=\"\$HOME/.local/lib/python`python3 -c 'import sys; \
+   print(".".join(map(str, sys.version_info[:2])))'`/site-packages:\$PYTHONPATH\"" >> ~/.bashrc
+   source ~/.bashrc
+ 
+@@ -73,7 +73,7 @@ flags:
+   * - ``-h, --help``                              
+     - show the help message and exit                                                                   
+ 
+-  * - ``--build_dir BUILD_DIR``                   
++  * - ``--build-dir BUILD_DIR``                   
+     - where to place the build directory                                                               
+ 
+   * - ``--uninstall``                             
+@@ -103,19 +103,19 @@ flags:
+   * - ``--test``                                  
+     - run tests after  building                                                                        
+ 
+-  * - ``--coin_root COIN_ROOT``                   
++  * - ``--coin-root COIN_ROOT``                   
+     - the relative path to the Coin-OR libraries directory                                             
+ 
+-  * - ``--boost_root BOOST_ROOT``                 
++  * - ``--boost-root BOOST_ROOT``                 
+     - the relative path to the Boost libraries directory                                               
+ 
+-  * - ``--hdf5_root HDF5_ROOT``                   
++  * - ``--hdf5-root HDF5_ROOT``                   
+     - the path to the HDF5 libraries directory                                                         
+ 
+-  * - ``--cmake_prefix_path CMAKE_PREFIX_PATH``   
++  * - ``--cmake-prefix-path CMAKE_PREFIX_PATH``   
+     - the cmake prefix path for use with FIND_PACKAGE, FIND_PATH, FIND_PROGRAM, or FIND_LIBRARY macros 
+ 
+-  * - ``--build_type BUILD_TYPE``                 
++  * - ``--build-type BUILD_TYPE``                 
+     - change the CMAKE_BUILD_TYPE                                                                      
+ 
+   * - ``-D VAR``                                  
+@@ -128,7 +128,7 @@ installation flag. The otherwise identical process would look like:
+ 
+ .. code-block:: bash
+ 
+-    .../cyclus$  python install.py --coin_root=path/to/coin
++    .../cyclus$  python3 install.py --coin-root=path/to/coin
+ 
+ 
+ CMake Cyclus Installation
+diff --git a/README.rst b/README.rst
+index d067770d..9d5c7c24 100644
+--- a/README.rst
++++ b/README.rst
+@@ -78,38 +78,33 @@ Cyclus is built using ``CMake``. For detailed instructions on Cyclus dependencie
+ Quick Cyclus Installation
+ *************************
+ The quickest way to install Cyclus and its dependencies relies on using the `conda-forge` channel and the `conda` package manager within the Anaconda python environment.  The following instructions guide you through that approach.
+-To install Cyclus and its dependencies onto a clean Ubuntu machine (tested on 18.04 LTS):
++To install Cyclus and its dependencies onto a clean Ubuntu machine (tested on 22.04 LTS):
+ 
+-- Download the latest Anaconda installer for Linux at
+-  ``https://www.anaconda.com/distribution/#download-section``
++- Download and install Miniconda for Linux
+ 
+-- Move the ``.sh`` to your Home directory
+ 
+-- In Terminal, execute the following commands:
+-
+-- ``bash Anaconda3-2019.03-Linux-x86_64.sh``
+-
+-- ``echo 'export PATH="~/anaconda/bin:$PATH"' >> ~/.bashrc``
+-
+-- ``source .bashrc``
+-
+-- ``conda config --add channels conda-forge``
+-
+-- ``conda create -n cyclus python=3.11``
++.. code-block:: bash
+ 
+-- ``conda activate cyclus``
++  mkdir -p ~/miniconda3
++  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
++  bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
++  rm -rf ~/miniconda3/miniconda.sh
+ 
+-- ``conda install -y gxx_linux-64 gcc_linux-64 cmake make git glib libxml2 libxmlpp-4.0 liblapack pkg-config coincbc boost-cpp hdf5 sqlite pcre setuptools pytest pytables pandas jinja2 cython websockets pprintpp pip``
++- Execute the following commands to initialize Miniconda:
+ 
+-- ``conda install -y --force-reinstall libsqlite``
++.. code-block:: bash
+ 
+-- Use ``sudo apt install`` to install and configure git
++  ~/miniconda3/bin/conda init bash
++  source ~/.bashrc
+ 
+-- Clone the Cyclus repository by running ``git clone https://github.com/cyclus/cyclus.git``
++- Create a new environment and install the Cyclus package
+ 
+-- Navigate to the folder containing Cyclus
++.. code-block:: bash
+ 
+-- Run the command ``python install.py``
++  conda config --add channels conda-forge
++  conda create -n cyclus
++  conda activate cyclus
++  conda install -y cyclus
+ 
+ For more detailed installation procedure, and/or custom installation please
+ refer to the `INSTALLATION guide <INSTALL.rst>`_.
+@@ -123,7 +118,7 @@ our tests). You can run the tests yourself via:
+ 
+ .. code-block:: bash
+ 
+-    $ cyclus_unit_tests
++    cyclus_unit_tests
+ 
+ 
+ *******************
+@@ -139,7 +134,7 @@ simulations, first download Cycamore
+   https://github.com/cyclus/cycamore.git``,
+ 
+ - Install in the same location you installed Cyclus (eg. in ``~/.local/``):
+-  ``python install.py`` from the ``cycamore`` folder.
++  ``python3 install.py`` from the ``cycamore`` folder.
+ 
+ 
+ **************
+@@ -152,7 +147,7 @@ file ``input.xml``, you can run Cyclus via:
+ 
+ .. code-block:: bash
+ 
+-    $ cyclus path/to/input.xml
++    cyclus path/to/input.xml
+ 
+ For a more detailed explanation, check out the `Cyclus User Guide`_.
+ 
+diff --git a/cli/cycpp.py b/cli/cycpp.py
+index ed1f2020..46103f93 100755
+--- a/cli/cycpp.py
++++ b/cli/cycpp.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ """The cyclus preprocessor.
+ 
+ cycpp is a 3-pass preprocessor which adds reflection-like semantics to cyclus
+diff --git a/cli/cycstub b/cli/cycstub
+index d090a7fd..898e8de4 100755
+--- a/cli/cycstub
++++ b/cli/cycstub
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ 
+ from __future__ import print_function
+ 
+diff --git a/cli/post-process-cython.py b/cli/post-process-cython.py
+index b1f6a375..64558539 100755
+--- a/cli/post-process-cython.py
++++ b/cli/post-process-cython.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ from __future__ import print_function, unicode_literals
+ import re
+ 
+diff --git a/cmake/FindPandas.cmake b/cmake/FindPandas.cmake
+deleted file mode 100644
+index de82e10e..00000000
+--- a/cmake/FindPandas.cmake
++++ /dev/null
+@@ -1,16 +0,0 @@
+-#
+-# Finds Pandas by trying to import it.
+-#
+-
+-FIND_PACKAGE( Python3 )
+-
+-IF( Python3_FOUND )
+-  EXECUTE_PROCESS( COMMAND ${Python3_EXECUTABLE} "-c" "import pandas;print(pandas.__version__)"
+-    OUTPUT_VARIABLE PANDAS_VERSION_STRING )
+-ENDIF()
+-
+-INCLUDE( FindPackageHandleStandardArgs )
+-find_package_handle_standard_args( Pandas
+-  DEFAULT_MSG
+-  PANDAS_VERSION_STRING
+-  )
+diff --git a/cmake/LibFindMacros.cmake b/cmake/LibFindMacros.cmake
+deleted file mode 100644
+index 27d7cb6e..00000000
+--- a/cmake/LibFindMacros.cmake
++++ /dev/null
+@@ -1,100 +0,0 @@
+-# Works the same as find_package, but forwards the "REQUIRED" and "QUIET" arguments
+-# used for the current package. For this to work, the first parameter must be the
+-# prefix of the current package, then the prefix of the new package etc, which are
+-# passed to find_package.
+-macro(libfind_package PREFIX)
+-    set(LIBFIND_PACKAGE_ARGS ${ARGN})
+-    if(${PREFIX}_FIND_QUIETLY)
+-        set(LIBFIND_PACKAGE_ARGS ${LIBFIND_PACKAGE_ARGS} QUIET)
+-    endif(${PREFIX}_FIND_QUIETLY)
+-    if(${PREFIX}_FIND_REQUIRED)
+-        set(LIBFIND_PACKAGE_ARGS ${LIBFIND_PACKAGE_ARGS} REQUIRED)
+-    endif(${PREFIX}_FIND_REQUIRED)
+-    message("-- ${PREFIX} find package args: ${LIBFIND_PACKAGE_ARGS}")
+-    find_package(${LIBFIND_PACKAGE_ARGS})
+-endmacro(libfind_package)
+-
+-# CMake developers made the UsePkgConfig system deprecated in the same release (2.6)
+-# where they added pkg_check_modules. Consequently I need to support both in my scripts
+-# to avoid those deprecated warnings. Here's a helper that does just that.
+-# Works identically to pkg_check_modules, except that no checks are needed prior to use.
+-macro(libfind_pkg_check_modules PREFIX PKGNAME)
+-    if(${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} EQUAL 4)
+-        include(UsePkgConfig)
+-        pkgconfig(${PKGNAME} ${PREFIX}_INCLUDE_DIRS ${PREFIX}_LIBRARY_DIRS ${PREFIX}_LDFLAGS ${PREFIX}_CFLAGS)
+-    else(${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} EQUAL 4)
+-        find_package(PkgConfig)
+-        if(PKG_CONFIG_FOUND)
+-            pkg_check_modules(${PREFIX} ${PKGNAME})
+-        endif(PKG_CONFIG_FOUND)
+-    endif(${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} EQUAL 4)
+-endmacro(libfind_pkg_check_modules)
+-
+-# Do the final processing once the paths have been detected.
+-# If include dirs are needed, ${PREFIX}_PROCESS_INCLUDES should be set to contain
+-# all the variables, each of which contain one include directory.
+-# Ditto for ${PREFIX}_PROCESS_LIBS and library files.
+-# Will set ${PREFIX}_FOUND, ${PREFIX}_INCLUDE_DIRS and ${PREFIX}_LIBRARIES.
+-# Also handles errors in case library detection was required, etc.
+-macro(libfind_process PREFIX)
+-    # Skip processing if already processed during this run
+-    if(NOT ${PREFIX}_FOUND)
+-        # Start with the assumption that the library was found
+-        set(${PREFIX}_FOUND TRUE)
+-
+-        # Process all includes and set _FOUND to false if any are missing
+-        foreach(i ${${PREFIX}_PROCESS_INCLUDES})
+-            if(${i})
+-                set(${PREFIX}_INCLUDE_DIRS ${${PREFIX}_INCLUDE_DIRS} ${${i}})
+-                mark_as_advanced(${i})
+-            else(${i})
+-                set(${PREFIX}_FOUND FALSE)
+-            endif(${i})
+-        endforeach(i)
+-
+-        # Process all libraries and set _FOUND to false if any are missing
+-        foreach(i ${${PREFIX}_PROCESS_LIBS})
+-            if(${i})
+-                set(${PREFIX}_LIBRARIES ${${PREFIX}_LIBRARIES} ${${i}})
+-                mark_as_advanced(${i})
+-            else(${i})
+-                set(${PREFIX}_FOUND FALSE)
+-            endif(${i})
+-        endforeach(i)
+-
+-        # Print message and/or exit on fatal error
+-        if(${PREFIX}_FOUND)
+-            if(NOT ${PREFIX}_FIND_QUIETLY)
+-                message(STATUS "Found ${PREFIX} ${${PREFIX}_VERSION}")
+-            endif(NOT ${PREFIX}_FIND_QUIETLY)
+-        else(${PREFIX}_FOUND)
+-            if(${PREFIX}_FIND_REQUIRED)
+-                foreach(i ${${PREFIX}_PROCESS_INCLUDES} ${${PREFIX}_PROCESS_LIBS})
+-                    message("${i}=${${i}}")
+-                endforeach(i)
+-                message(FATAL_ERROR "Required library ${PREFIX} NOT FOUND.\nInstall the library (dev version) and try again. If the library is already installed, use ccmake to set the missing variables manually.")
+-            endif(${PREFIX}_FIND_REQUIRED)
+-        endif(${PREFIX}_FOUND)
+-    endif(NOT ${PREFIX}_FOUND)
+-endmacro(libfind_process)
+-
+-macro(libfind_library PREFIX basename)
+-    set(TMP "")
+-    if(MSVC80)
+-        set(TMP -vc80)
+-    endif(MSVC80)
+-    if(MSVC90)
+-        set(TMP -vc90)
+-    endif(MSVC90)
+-    set(${PREFIX}_LIBNAMES ${basename}${TMP})
+-    if(${ARGC} GREATER 2)
+-        set(${PREFIX}_LIBNAMES ${basename}${TMP}-${ARGV2})
+-        string(REGEX REPLACE "\\." "_" TMP ${${PREFIX}_LIBNAMES})
+-        set(${PREFIX}_LIBNAMES ${${PREFIX}_LIBNAMES} ${TMP})
+-    endif(${ARGC} GREATER 2)
+-    find_library(${PREFIX}_LIBRARY
+-        NAMES ${${PREFIX}_LIBNAMES}
+-        ${DEPS_HINTS}
+-        PATHS ${${PREFIX}_PKGCONF_LIBRARY_DIRS}
+-        )
+-endmacro(libfind_library)
+diff --git a/cmake/SelectLibraryConfigurations.cmake b/cmake/SelectLibraryConfigurations.cmake
+deleted file mode 100644
+index 9fd55186..00000000
+--- a/cmake/SelectLibraryConfigurations.cmake
++++ /dev/null
+@@ -1,81 +0,0 @@
+-# select_library_configurations(basename)
+-#
+-# This macro takes a library base name as an argument, and will choose good
+-# values for basename_LIBRARY, basename_LIBRARIES, basename_LIBRARY_DEBUG, and
+-# basename_LIBRARY_RELEASE depending on what has been found and set.  If only
+-# basename_LIBRARY_RELEASE is defined, basename_LIBRARY, basename_LIBRARY_DEBUG,
+-# and basename_LIBRARY_RELEASE will be set to the release value.  If only
+-# basename_LIBRARY_DEBUG is defined, then basename_LIBRARY,
+-# basename_LIBRARY_DEBUG and basename_LIBRARY_RELEASE will take the debug value.
+-#
+-# If the generator supports configuration types, then basename_LIBRARY and
+-# basename_LIBRARIES will be set with debug and optimized flags specifying the
+-# library to be used for the given configuration.  If no build type has been set
+-# or the generator in use does not support configuration types, then
+-# basename_LIBRARY and basename_LIBRARIES will take only the release values.
+-
+-#=============================================================================
+-# Copyright 2009 Kitware, Inc.
+-# Copyright 2009 Will Dicharry <wdicharry@stellarscience.com>
+-# Copyright 2005-2009 Kitware, Inc.
+-#
+-# Distributed under the OSI-approved BSD License (the "License");
+-# see accompanying file Copyright.txt for details.
+-#
+-# This software is distributed WITHOUT ANY WARRANTY; without even the
+-# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+-# See the License for more information.
+-#=============================================================================
+-# (To distributed this file outside of CMake, substitute the full
+-#  License text for the above reference.)
+-
+-# This macro was adapted from the FindQt4 CMake module and is maintained by Will
+-# Dicharry <wdicharry@stellarscience.com>.
+-
+-# Utility macro to check if one variable exists while another doesn't, and set
+-# one that doesn't exist to the one that exists.
+-macro(_set_library_name basename GOOD BAD)
+-    if(${basename}_LIBRARY_${GOOD} AND NOT ${basename}_LIBRARY_${BAD})
+-        set(${basename}_LIBRARY_${BAD} ${${basename}_LIBRARY_${GOOD}})
+-        set(${basename}_LIBRARY ${${basename}_LIBRARY_${GOOD}})
+-        set(${basename}_LIBRARIES ${${basename}_LIBRARY_${GOOD}})
+-    endif(${basename}_LIBRARY_${GOOD} AND NOT ${basename}_LIBRARY_${BAD})
+-endmacro(_set_library_name)
+-
+-macro(select_library_configurations basename)
+-    # if only the release version was found, set the debug to be the release
+-    # version.
+-    _set_library_name(${basename} RELEASE DEBUG)
+-    # if only the debug version was found, set the release value to be the
+-    # debug value.
+-    _set_library_name(${basename} DEBUG RELEASE)
+-    if(${basename}_LIBRARY_DEBUG AND ${basename}_LIBRARY_RELEASE)
+-        # if the generator supports configuration types or CMAKE_BUILD_TYPE
+-        # is set, then set optimized and debug options.
+-        if(CMAKE_CONFIGURATION_TYPES OR CMAKE_BUILD_TYPE)
+-            set(${basename}_LIBRARY
+-                optimized ${${basename}_LIBRARY_RELEASE}
+-                debug ${${basename}_LIBRARY_DEBUG})
+-            set(${basename}_LIBRARIES
+-                optimized ${${basename}_LIBRARY_RELEASE}
+-                debug ${${basename}_LIBRARY_DEBUG})
+-        else(CMAKE_CONFIGURATION_TYPES OR CMAKE_BUILD_TYPE)
+-            # If there are no configuration types or build type, just use
+-            # the release version
+-            set(${basename}_LIBRARY ${${basename}_LIBRARY_RELEASE})
+-            set(${basename}_LIBRARIES ${${basename}_LIBRARY_RELEASE})
+-        endif(CMAKE_CONFIGURATION_TYPES OR CMAKE_BUILD_TYPE)
+-    endif(${basename}_LIBRARY_DEBUG AND ${basename}_LIBRARY_RELEASE)
+-
+-    set(${basename}_LIBRARY ${${basename}_LIBRARY} CACHE FILEPATH
+-        "The ${basename} library")
+-
+-    if(${basename}_LIBRARY)
+-        set(${basename}_FOUND TRUE)
+-    endif(${basename}_LIBRARY)
+-
+-    mark_as_advanced(${basename}_LIBRARY
+-        ${basename}_LIBRARY_RELEASE
+-        ${basename}_LIBRARY_DEBUG
+-        )
+-endmacro(select_library_configurations)
+diff --git a/cmake/UseCython.cmake b/cmake/UseCython.cmake
+index 122a8158..e75c0e96 100644
+--- a/cmake/UseCython.cmake
++++ b/cmake/UseCython.cmake
+@@ -284,7 +284,7 @@ function( cython_add_standalone_executable _name )
+   set( other_module_sources "" )
+   set( main_module "" )
+   cmake_parse_arguments( cython_arguments "" "MAIN_MODULE" "" ${ARGN} )
+-  include_directories( ${PYTHON_INCLUDE_DIRS} )
++  include_directories( ${Python3_INCLUDE_DIRS} )
+   foreach( _file ${cython_arguments_UNPARSED_ARGUMENTS} )
+     if( ${_file} MATCHES ".*\\.py[x]?$" )
+       get_filename_component( _file_we ${_file} NAME_WE )
+@@ -310,5 +310,5 @@ function( cython_add_standalone_executable _name )
+   set( CYTHON_FLAGS ${CYTHON_FLAGS} --embed )
+   compile_pyx( "${main_module_we}_static" generated_file ${main_module} )
+   add_executable( ${_name} ${generated_file} ${pyx_module_sources} ${other_module_sources} )
+-  target_link_libraries( ${_name} ${PYTHON_LIBRARIES} ${pyx_module_libs} )
++  target_link_libraries( ${_name} ${Python3_LIBRARIES} ${pyx_module_libs} )
+ endfunction()
+diff --git a/cyclus/CMakeLists.txt b/cyclus/CMakeLists.txt
+index 82edcfc8..cf6009e0 100644
+--- a/cyclus/CMakeLists.txt
++++ b/cyclus/CMakeLists.txt
+@@ -8,7 +8,7 @@ INCLUDE_DIRECTORIES(${CYCLUS_CORE_INCLUDE_DIRS})
+ # First things first, code-generation
+ #
+ message(STATUS "Generating Type System API for Python")
+-EXECUTE_PROCESS(COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/gentypesystem.py
++EXECUTE_PROCESS(COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/gentypesystem.py
+     "--src-dir=${CMAKE_CURRENT_SOURCE_DIR}"
+     "--data-model-version=${DATA_MODEL_VERSION}"
+     "--verbose"
+diff --git a/cyclus/gentypesystem.py b/cyclus/gentypesystem.py
+index fab269e9..b794f16d 100644
+--- a/cyclus/gentypesystem.py
++++ b/cyclus/gentypesystem.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ """Generates Cyclus Type System bindings.
+ 
+ Module history:
+diff --git a/cyclus/server.py b/cyclus/server.py
+index 8f650b50..f7545629 100644
+--- a/cyclus/server.py
++++ b/cyclus/server.py
+@@ -175,18 +175,18 @@ Command Line Interface
+ ======================
+ You may launch the cyclus server by running::
+ 
+-    $ python -m cyclus.server input.xml
++    $ python3 -m cyclus.server input.xml
+ 
+ Most of the arguments are relatively self-explanatory. However, the CLI here
+ also allows you to load initial and repeating actions. The syntax for this
+ is an event name followed by parameter tokens (which must contain an equals
+ sign)::
+ 
+-    $ python -m cyclus.server input.xml --repeating-actions sleep n=1
++    $ python3 -m cyclus.server input.xml --repeating-actions sleep n=1
+ 
+ You may load many actions by repeating the name-params pattern:
+ 
+-    $ python -m cyclus.server input.xml --repeating-actions \
++    $ python3 -m cyclus.server input.xml --repeating-actions \
+         sleep n=1 \
+         table_data table="TimeSeriesPower"
+ 
+diff --git a/docker/Dockerfile b/docker/Dockerfile
+index 2661659e..0aec9b62 100644
+--- a/docker/Dockerfile
++++ b/docker/Dockerfile
+@@ -37,8 +37,7 @@ RUN apt update -y && apt install -y \
+ RUN apt install -y python3-pprintpp; exit 0
+ RUN apt clean -y all
+ 
+-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+-RUN mkdir -p `python -m site --user-site`
++RUN mkdir -p `python3 -m site --user-site`
+ 
+ FROM common-base as conda-deps
+ 
+@@ -91,7 +90,7 @@ RUN conda update -y --all && \
+                && \
+     mamba install -y --force-reinstall libsqlite && \
+     conda clean -y --all
+-RUN mkdir -p `python -m site --user-site`
++RUN mkdir -p `python3 -m site --user-site`
+ ENV CC /opt/conda/bin/x86_64-conda_cos6-linux-gnu-gcc
+ ENV CXX /opt/conda/bin/x86_64-conda_cos6-linux-gnu-g++
+ ENV CPP /opt/conda/bin/x86_64-conda_cos6-linux-gnu-cpp
+@@ -110,12 +109,13 @@ ARG make_cores=2
+ COPY . /cyclus
+ WORKDIR /cyclus
+ 
+-RUN python install.py -j ${make_cores} --allow-milps --code_coverage
++RUN python3 install.py -j ${make_cores} --allow-milps --code-coverage
++
+ ENV PATH /root/.local/bin:$PATH
+ ENV LD_LIBRARY_PATH /root/.local/lib:/root/.local/lib/cyclus
+ RUN lcov -c -d /cyclus -o initial_coverage.info --gcov-tool ${GCOV} --initial --no-external && \
+     cyclus_unit_tests && \
+-    cd tests && python -m pytest && cd .. && \
++    cd tests && python3 -m pytest && cd .. && \
+     lcov -c -d /cyclus -o test_coverage.info --gcov-tool ${GCOV} --no-external && \
+     lcov --add-tracefile initial_coverage.info --add-tracefile test_coverage.info -o total_coverage.info && \
+     mkdir -p html && genhtml total_coverage.info --output-directory html
+@@ -135,7 +135,7 @@ WORKDIR /cyclus
+ 
+ # You may add the option "--cmake-debug" to the following command
+ # for further CMake debugging.
+-RUN python install.py -j ${make_cores} --allow-milps
++RUN python3 install.py -j ${make_cores} --allow-milps
+ ENV PATH /root/.local/bin:$PATH
+ 
+ FROM cyclus as deb-generation
+@@ -151,4 +151,4 @@ RUN cyclus_unit_tests
+ 
+ FROM cyclus-test as cyclus-pytest
+ 
+-RUN cd tests && python -m pytest
++RUN cd tests && python3 -m pytest
+diff --git a/docker/Rocky.dockerfile b/docker/Rocky.dockerfile
+index 5056c8cf..e7298fc0 100644
+--- a/docker/Rocky.dockerfile
++++ b/docker/Rocky.dockerfile
+@@ -8,13 +8,11 @@ RUN dnf update -y && \
+     dnf install -y python3.11 epel-release
+ 
+ FROM common-base as rocky-8-config
+-RUN alternatives --set python /usr/bin/python3.11 && \
+-    alternatives --set python3 /usr/bin/python3.11 && \
++RUN alternatives --set python3 /usr/bin/python3.11 && \
+     dnf config-manager --set-enabled powertools
+ 
+ FROM common-base as rocky-9-config
+-RUN alternatives --install /usr/bin/python python /bin/python3.11 10 && \
+-    alternatives --install /usr/bin/python3 python3 /bin/python3.11 10 && \
++RUN alternatives --install /usr/bin/python3 python3 /bin/python3.11 10 && \
+     dnf config-manager --set-enabled crb
+ 
+ FROM rocky-${rocky_version}-config as dnf-deps
+@@ -37,11 +35,11 @@ RUN dnf update -y && dnf install -y \
+         python3.11-pytest \
+     && dnf clean all
+ 
+-RUN mkdir -p $(python -m site --user-site) && python -m pip install pandas tables cython jinja2
++RUN mkdir -p $(python3 -m site --user-site) && python3 -m pip install pandas tables cython jinja2
+ 
+ FROM dnf-deps as libxmlpp
+ RUN dnf update -y && dnf install -y wget m4 doxygen perl-open perl-XML-Parser diffutils pcre-cpp pcre-devel  && \
+-    python -m pip install meson ninja packaging && \
++    python3 -m pip install meson ninja packaging && \
+     wget https://github.com/libxmlplusplus/libxmlplusplus/releases/download/4.0.3/libxml++-4.0.3.tar.xz && \
+     tar xf libxml++-4.0.3.tar.xz && \
+     cd libxml++-4.0.3 && \
+@@ -72,7 +70,7 @@ WORKDIR /cyclus
+ 
+ # You may add the option "--cmake-debug" to the following command
+ # for further CMake debugging.
+-RUN python install.py -j ${make_cores} -D Python3_EXECUTABLE=/usr/bin/python3.11
++RUN python3 install.py -j ${make_cores} -D Python3_EXECUTABLE=/usr/bin/python3.11
+ ENV PATH /root/.local/bin:$PATH
+ ENV LD_LIBRARY_PATH /root/.local/lib:/root/.local/lib/cyclus
+ 
+@@ -82,5 +80,5 @@ RUN cyclus_unit_tests
+ 
+ FROM cyclus-test as cyclus-pytest
+ 
+-RUN cd tests && python -m pytest
++RUN cd tests && python3 -m pytest
+ 
+diff --git a/install.py b/install.py
+index ab5ba227..85f248e1 100644
+--- a/install.py
++++ b/install.py
+@@ -132,7 +132,7 @@ def main():
+     parser = ap.ArgumentParser(description=description)
+ 
+     build_dir = 'where to place the build directory'
+-    parser.add_argument('--build_dir', help=build_dir, default='build')
++    parser.add_argument('--build-dir', help=build_dir, default='build')
+ 
+     uninst = 'uninstall'
+     parser.add_argument('--uninstall', action='store_true', help=uninst, default=False)
+@@ -175,7 +175,7 @@ def main():
+     parser.add_argument('--coin-root', '--coin_root', help=coin)
+ 
+     boost = "the relative path to the Boost libraries directory"
+-    parser.add_argument('--boost_root', help=boost)
++    parser.add_argument('--boost-root', help=boost)
+ 
+     hdf5 = "the path to the HDF5 libraries directory"
+     parser.add_argument('--hdf5_root', help=hdf5)
+@@ -185,7 +185,7 @@ def main():
+ 
+     cmake_prefix_path = "the cmake prefix path for use with FIND_PACKAGE, " + \
+         "FIND_PATH, FIND_PROGRAM, or FIND_LIBRARY macros"
+-    parser.add_argument('--cmake_prefix_path', help=cmake_prefix_path)
++    parser.add_argument('--cmake-prefix-path', help=cmake_prefix_path)
+ 
+     build_type = "the CMAKE_BUILD_TYPE"
+     parser.add_argument('--build-type', '--build_type', help=build_type,
+@@ -201,7 +201,7 @@ def main():
+                                                  'when dealing with build system issues.')
+ 
+     code_coverage = "Enable code coverage analysis using gcov/lcov"
+-    parser.add_argument('--code_coverage', help=code_coverage, default=False, action="store_true")
++    parser.add_argument('--code-coverage', help=code_coverage, default=False, action="store_true")
+ 
+     parser.add_argument('--fast', default=None, dest='fast',
+                         action='store_true', help="Will try to compile "
+diff --git a/setup.py b/setup.py
+index 32cd3de4..66fac232 100644
+--- a/setup.py
++++ b/setup.py
+@@ -57,8 +57,7 @@ def run_setup(ver):
+         url='http://fuelcycle.org',
+         platforms=['posix'],
+         classifiers=['Operating System :: POSIX',
+-                     'Programming Language :: Python :: 3',
+-                     'Programming Language :: Python :: 2'],
++                     'Programming Language :: Python :: 3'],
+         packages=['cyclus'],
+         package_dir={'cyclus': 'cyclus'},
+         package_data={'cyclus': ['*.pxd', '*.so', '*.dylib']},
+diff --git a/share/CMakeLists.txt b/share/CMakeLists.txt
+index 9902efa7..91f3ada3 100644
+--- a/share/CMakeLists.txt
++++ b/share/CMakeLists.txt
+@@ -20,7 +20,7 @@ CONFIGURE_FILE(
+     COPYONLY
+     )
+ 
+-EXECUTE_PROCESS(COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/dbtypes_gen.py ${DATA_MODEL_VERSION} OUTPUT_VARIABLE DBTYPES_JSON_ENTRIES RESULT_VARIABLE res_var)
++EXECUTE_PROCESS(COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/dbtypes_gen.py ${DATA_MODEL_VERSION} OUTPUT_VARIABLE DBTYPES_JSON_ENTRIES RESULT_VARIABLE res_var)
+ IF(NOT "${res_var}" STREQUAL "0")
+   message(FATAL_ERROR "Process dbtypes_gen.py failed, res_var = '${res_var}'")
+ ENDIF()
+diff --git a/share/dbtypes_gen.py b/share/dbtypes_gen.py
+index 09c628bc..ed75fd5a 100644
+--- a/share/dbtypes_gen.py
++++ b/share/dbtypes_gen.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ from __future__ import print_function
+ import os
+ import re
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 19a2789a..30937077 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -33,7 +33,7 @@ CONFIGURE_FILE(
+     @ONLY
+     )
+ 
+-EXECUTE_PROCESS(COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/hdf5_back_gen.py "VAL_TO_BUF_H" OUTPUT_VARIABLE HDF5_BACK_CC_VAL_TO_BUF_H RESULT_VARIABLE res_var_h)
++EXECUTE_PROCESS(COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/hdf5_back_gen.py "VAL_TO_BUF_H" OUTPUT_VARIABLE HDF5_BACK_CC_VAL_TO_BUF_H RESULT_VARIABLE res_var_h)
+ IF(NOT "${res_var_h}" STREQUAL "0")
+   message(FATAL_ERROR "Process hdf5_back_gen.py 'VAL_TO_BUF_H' failed, result = '${res_var_h}'")
+ ENDIF()
+@@ -48,37 +48,37 @@ copy_when_diff(
+     "${CMAKE_CURRENT_SOURCE_DIR}/hdf5_back.h"
+     )
+ 
+-EXECUTE_PROCESS(COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/hdf5_back_gen.py "QUERY" OUTPUT_VARIABLE HDF5_BACK_CC_QUERY RESULT_VARIABLE res_var_q)
++EXECUTE_PROCESS(COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/hdf5_back_gen.py "QUERY" OUTPUT_VARIABLE HDF5_BACK_CC_QUERY RESULT_VARIABLE res_var_q)
+ IF(NOT "${res_var_q}" STREQUAL "0")
+   message(FATAL_ERROR "Process hdf5_back_gen.py 'QUERY' failed, result = '${res_var_q}'")
+ ENDIF()
+ 
+-EXECUTE_PROCESS(COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/hdf5_back_gen.py "CREATE" OUTPUT_VARIABLE HDF5_BACK_CC_CREATE RESULT_VARIABLE res_var_c)
++EXECUTE_PROCESS(COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/hdf5_back_gen.py "CREATE" OUTPUT_VARIABLE HDF5_BACK_CC_CREATE RESULT_VARIABLE res_var_c)
+ IF(NOT "${res_var_c}" STREQUAL "0")
+   message(FATAL_ERROR "Process hdf5_back_gen.py 'CREATE' failed, result = '${res_var_c}'")
+ ENDIF()
+ 
+-EXECUTE_PROCESS(COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/hdf5_back_gen.py "VL_DATASET" OUTPUT_VARIABLE HDF5_BACK_CC_VL_DATASET RESULT_VARIABLE res_var_v)
++EXECUTE_PROCESS(COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/hdf5_back_gen.py "VL_DATASET" OUTPUT_VARIABLE HDF5_BACK_CC_VL_DATASET RESULT_VARIABLE res_var_v)
+ IF(NOT "${res_var_v}" STREQUAL "0")
+   message(FATAL_ERROR "Process hdf5_back_gen.py 'VL_DATASET' failed, result = '${res_var_v}'")
+ ENDIF()
+ 
+-EXECUTE_PROCESS(COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/hdf5_back_gen.py "FILL_BUF" OUTPUT_VARIABLE HDF5_BACK_CC_FILL_BUF RESULT_VARIABLE res_var_f)
++EXECUTE_PROCESS(COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/hdf5_back_gen.py "FILL_BUF" OUTPUT_VARIABLE HDF5_BACK_CC_FILL_BUF RESULT_VARIABLE res_var_f)
+ IF(NOT "${res_var_f}" STREQUAL "0")
+   message(FATAL_ERROR "Process hdf5_back_gen.py 'FILL_BUF' failed, result = '${res_var_f}'")
+ ENDIF()
+ 
+-EXECUTE_PROCESS(COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/hdf5_back_gen.py "WRITE" OUTPUT_VARIABLE HDF5_BACK_CC_WRITE RESULT_VARIABLE res_var_w)
++EXECUTE_PROCESS(COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/hdf5_back_gen.py "WRITE" OUTPUT_VARIABLE HDF5_BACK_CC_WRITE RESULT_VARIABLE res_var_w)
+ IF(NOT "${res_var_w}" STREQUAL "0")
+   message(FATAL_ERROR "Process hdf5_back_gen.py 'WRITE' failed, result = '${res_var_w}'")
+ ENDIF()
+ 
+-EXECUTE_PROCESS(COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/hdf5_back_gen.py "VAL_TO_BUF" OUTPUT_VARIABLE HDF5_BACK_CC_VAL_TO_BUF RESULT_VARIABLE res_var_vb)
++EXECUTE_PROCESS(COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/hdf5_back_gen.py "VAL_TO_BUF" OUTPUT_VARIABLE HDF5_BACK_CC_VAL_TO_BUF RESULT_VARIABLE res_var_vb)
+ IF(NOT "${res_var_vb}" STREQUAL "0")
+   message(FATAL_ERROR "Process hdf5_back_gen.py 'VAL_TO_BUF' failed, result = '${res_var_vb}'")
+ ENDIF()
+ 
+-EXECUTE_PROCESS(COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/hdf5_back_gen.py "BUF_TO_VAL" OUTPUT_VARIABLE HDF5_BACK_CC_BUF_TO_VAL RESULT_VARIABLE res_var_bv)
++EXECUTE_PROCESS(COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/hdf5_back_gen.py "BUF_TO_VAL" OUTPUT_VARIABLE HDF5_BACK_CC_BUF_TO_VAL RESULT_VARIABLE res_var_bv)
+ IF(NOT "${res_var_bv}" STREQUAL "0")
+   message(FATAL_ERROR "Process hdf5_back_gen.py 'BUF_TO_VAL' failed, result = '${res_var_bv}'")
+ ENDIF()
+diff --git a/src/hdf5_back_gen.py b/src/hdf5_back_gen.py
+index 04875905..5d4c0592 100644
+--- a/src/hdf5_back_gen.py
++++ b/src/hdf5_back_gen.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ """This module generates HDF5 backend code found in src/hdf5_back.cc
+ 
+ There are 8 distinct code generation options, one of which must be passed
+@@ -14,7 +14,7 @@ Example
+ -------
+ To generate the code found in src/hdf5_back.cc::Query, use
+ 
+-    $ python hdf5_back_gen.py QUERY
++    $ python3 hdf5_back_gen.py QUERY
+ 
+ """
+ import os
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index 2826f7a9..eb6138bf 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -95,7 +95,7 @@ set(tgt "cyclus_unit_tests")
+ add_custom_target(
+     ${tgt}-post-build
+     DEPENDS ${tgt}
+-    COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/generate_gtest_macros.py"
++    COMMAND ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/generate_gtest_macros.py"
+     "--executable=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${tgt}"
+     "--output=${CYCLUS_BINARY_DIR}/CTestTestfile.cmake"
+     COMMENT "adding tests from ${tgt}"
+diff --git a/tests/test_stubs.py b/tests/test_stubs.py
+index a7675500..d94a6dd2 100644
+--- a/tests/test_stubs.py
++++ b/tests/test_stubs.py
+@@ -28,7 +28,7 @@ def test_stubs():
+         inst = os.path.join(d, 'baz')
+ 
+         stub_cmd = 'cycstub --type {0} {1}:{1}:{2}'
+-        inst_cmd = 'python install.py --build_dir {0} --prefix {1}'
++        inst_cmd = 'python3 install.py --build_dir {0} --prefix {1}'
+         tst_cmd = './bin/{}_unit_tests'
+ 
+         log = 'stub_test.log'
