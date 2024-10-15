@@ -5,11 +5,13 @@ package:
   version: {{ version }}
 
 source:
-  git_url: https://github.com/bennibbelink/cyclus.git
-  git_rev: cleanup-dependencies
+  git_url: https://github.com/cyclus/cyclus.git
+  git_rev: 1.6.0
+  patches:
+    - patches/1748.patch
 
 build:
-  number: 3
+  number: 4
   skip: true  # [win or osx]
   detect_binary_files_with_prefix: true
   preserve_egg_dir: true
