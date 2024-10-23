@@ -1,4 +1,4 @@
-{% set version = "1.6.0dev" %}
+{% set version = "dev" %}
 
 package:
   name: cyclus
