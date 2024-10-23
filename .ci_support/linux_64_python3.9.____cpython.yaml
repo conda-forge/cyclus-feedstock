@@ -11,7 +11,7 @@ cdt_name:
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge cyclus_dev
+- conda-forge dev
 coincbc:
 - '2.10'
 cxx_compiler:

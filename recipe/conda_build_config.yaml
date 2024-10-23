@@ -1,2 +1,2 @@
 channel_targets:
-  - conda-forge cyclus_dev
+  - conda-forge dev
