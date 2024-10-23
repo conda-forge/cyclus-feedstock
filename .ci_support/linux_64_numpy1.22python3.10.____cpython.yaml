@@ -1,3 +1,5 @@
+bzip2:
+- '1'
 c_compiler:
 - gcc
 c_compiler_version:
@@ -12,8 +14,16 @@ channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge dev
-coincbc:
+coin_or_cbc:
 - '2.10'
+coin_or_cgl:
+- '0.60'
+coin_or_clp:
+- '1.17'
+coin_or_osi:
+- '0.108'
+coin_or_utils:
+- '2.11'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
@@ -24,18 +34,30 @@ glib:
 - '2'
 hdf5:
 - 1.14.3
+icu:
+- '73'
+libaec:
+- '1'
 libboost_devel:
 - '1.84'
+libcurl:
+- '8'
+libiconv:
+- '1'
 liblapack:
 - 3.9 *netlib
 libxml2:
 - '2'
+numpy:
+- '1.22'
+openssl:
+- '3'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.11.* *_cpython
+- 3.10.* *_cpython
 sqlite:
 - '3'
 target_platform:
@@ -45,3 +67,7 @@ zip_keys:
   - cxx_compiler_version
 - - c_stdlib_version
   - cdt_name
+- - python
+  - numpy
+zlib:
+- '1'
