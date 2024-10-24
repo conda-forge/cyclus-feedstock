@@ -13,7 +13,7 @@ cdt_name:
 channel_sources:
 - conda-forge
 channel_targets:
-- conda-forge dev
+- conda-forge cyclus_dev
 coin_or_cbc:
 - '2.10'
 coin_or_cgl:
