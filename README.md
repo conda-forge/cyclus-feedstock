@@ -100,14 +100,14 @@ Current release info
 Installing cyclus
 =================
 
-Installing `cyclus` from the `conda-forge/label/dev` channel can be achieved by adding `conda-forge/label/dev` to your channels with:
+Installing `cyclus` from the `conda-forge/label/cyclus_dev` channel can be achieved by adding `conda-forge/label/cyclus_dev` to your channels with:
 
 ```
-conda config --add channels conda-forge/label/dev
+conda config --add channels conda-forge/label/cyclus_dev
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge/label/dev` channel has been enabled, `cyclus` can be installed with `conda`:
+Once the `conda-forge/label/cyclus_dev` channel has been enabled, `cyclus` can be installed with `conda`:
 
 ```
 conda install cyclus
@@ -122,26 +122,26 @@ mamba install cyclus
 It is possible to list all of the versions of `cyclus` available on your platform with `conda`:
 
 ```
-conda search cyclus --channel conda-forge/label/dev
+conda search cyclus --channel conda-forge/label/cyclus_dev
 ```
 
 or with `mamba`:
 
 ```
-mamba search cyclus --channel conda-forge/label/dev
+mamba search cyclus --channel conda-forge/label/cyclus_dev
 ```
 
 Alternatively, `mamba repoquery` may provide more information:
 
 ```
 # Search all versions available on your platform:
-mamba repoquery search cyclus --channel conda-forge/label/dev
+mamba repoquery search cyclus --channel conda-forge/label/cyclus_dev
 
 # List packages depending on `cyclus`:
-mamba repoquery whoneeds cyclus --channel conda-forge/label/dev
+mamba repoquery whoneeds cyclus --channel conda-forge/label/cyclus_dev
 
 # List dependencies of `cyclus`:
-mamba repoquery depends cyclus --channel conda-forge/label/dev
+mamba repoquery depends cyclus --channel conda-forge/label/cyclus_dev
 ```
 
 
