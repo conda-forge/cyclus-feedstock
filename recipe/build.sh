@@ -2,22 +2,16 @@
 set -e
 
 if [ "$(uname)" == "Darwin" ]; then
-  # other
-  libext=".dylib"
-  export LDFLAGS="-rpath ${PREFIX}/lib ${LDFLAGS}"
-  export LINKFLAGS="${LDFLAGS}"
-  skiprpath="-DCMAKE_SKIP_RPATH=TRUE"
-else
-  libext=".so"
-  skiprpath=""
+  FIND_FRAMEWORK_NEVER="-DCMAKE_FIND_FRAMEWORK=NEVER"
+  FIND_APPBUNDLE_NEVER="-DCMAKE_FIND_APPBUNDLE=NEVER"
 fi
 
 # Install Cyclus
 #export VERBOSE=1
 ${PYTHON} install.py \
   --prefix=${PREFIX} \
-  -DCMAKE_INCLUDE_PATH=$CONDA_PREFIX/include \
-  -DCMAKE_LIBRARY_PATH=$CONDA_PREFIX/lib \
+  ${FIND_FRAMEWORK_NEVER} \
+  ${FIND_APPBUNDLE_NEVER} \
   --allow-milps \
   -DCMAKE_C_COMPILER=${GCC} \
   -DCMAKE_CXX_COMPILER=${CXX} \
