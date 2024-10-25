@@ -9,8 +9,8 @@ source:
   git_rev: main
 
 build:
-  number: 1
-  skip: true  # [win or osx]
+  number: 2
+  skip: true  # [win]
   detect_binary_files_with_prefix: true
   preserve_egg_dir: true
     

@@ -16,6 +16,8 @@ fi
 #export VERBOSE=1
 ${PYTHON} install.py \
   --prefix=${PREFIX} \
+  -DCMAKE_INCLUDE_PATH=$CONDA_PREFIX/include \
+  -DCMAKE_LIBRARY_PATH=$CONDA_PREFIX/lib \
   --allow-milps \
   -DCMAKE_C_COMPILER=${GCC} \
   -DCMAKE_CXX_COMPILER=${CXX} \
