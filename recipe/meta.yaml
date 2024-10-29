@@ -9,7 +9,7 @@ source:
   git_rev: main
 
 build:
-  number: 3
+  number: 4
   skip: true  # [win]
   detect_binary_files_with_prefix: true
   preserve_egg_dir: true
@@ -31,7 +31,7 @@ requirements:
     - pandas
     - jinja2
     # C/C++ libraries
-    - blis
+    - blis # [not (osx and arm64)]
     - bzip2
     - coin-or-cbc
     - coin-or-cgl
