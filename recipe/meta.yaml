@@ -22,7 +22,6 @@ requirements:
     - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - coincbc
     - libboost-devel
     - libxmlpp-4.0
     - libxml2

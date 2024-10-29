@@ -14,8 +14,6 @@ channel_targets:
 - conda-forge main
 coin_or_cbc:
 - '2.10'
-coincbc:
-- '2.10'
 cxx_compiler:
 - gxx
 cxx_compiler_version:
