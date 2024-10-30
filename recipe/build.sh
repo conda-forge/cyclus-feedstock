@@ -6,12 +6,17 @@ if [ "$(uname)" == "Darwin" ]; then
   FIND_APPBUNDLE_NEVER="-DCMAKE_FIND_APPBUNDLE=NEVER"
 fi
 
+if [ $(uname -m) == "arm64" ]; then
+    SLOW_FLAG="--slow"
+fi
+
 # Install Cyclus
 #export VERBOSE=1
 ${PYTHON} install.py \
   --prefix=${PREFIX} \
   ${FIND_FRAMEWORK_NEVER} \
   ${FIND_APPBUNDLE_NEVER} \
+  ${SLOW} \
   --allow-milps \
   -DCMAKE_C_COMPILER=${GCC} \
   -DCMAKE_CXX_COMPILER=${CXX} \
