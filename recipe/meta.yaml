@@ -60,7 +60,6 @@ requirements:
     - zlib
   run:
     - python
-    - blis
     - pandas
 
 
