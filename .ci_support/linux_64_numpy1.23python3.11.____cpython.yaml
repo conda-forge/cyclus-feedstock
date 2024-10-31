@@ -38,8 +38,6 @@ icu:
 - '73'
 libaec:
 - '1'
-libblas:
-- 3.9 *netlib
 libboost_devel:
 - '1.84'
 libcurl:
@@ -52,6 +50,8 @@ libxml2:
 - '2'
 numpy:
 - '1.23'
+openblas:
+- 0.3.*
 openssl:
 - '3'
 pin_run_as_build:
