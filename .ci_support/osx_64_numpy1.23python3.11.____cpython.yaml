@@ -7,7 +7,7 @@ bzip2:
 c_compiler:
 - clang
 c_compiler_version:
-- '17'
+- '18'
 c_stdlib:
 - macosx_deployment_target
 c_stdlib_version:
@@ -29,7 +29,7 @@ coin_or_utils:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '17'
+- '18'
 glib:
 - '2'
 hdf5:
@@ -38,6 +38,8 @@ icu:
 - '73'
 libaec:
 - '1'
+libblas:
+- 3.9 *netlib
 libboost_devel:
 - '1.84'
 libcurl:
@@ -52,8 +54,6 @@ macos_machine:
 - x86_64-apple-darwin13.4.0
 numpy:
 - '1.23'
-openblas:
-- 0.3.*
 openssl:
 - '3'
 pin_run_as_build:
