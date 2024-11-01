@@ -9,7 +9,7 @@ source:
   git_rev: main
 
 build:
-  number: 3
+  number: 4
   skip: true  # [win]
   detect_binary_files_with_prefix: true
   preserve_egg_dir: true
@@ -22,6 +22,11 @@ requirements:
     - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    # For arm64 cross-compilation
+    - python  # [build_platform != target_platform]
+    - cross-python_{{ target_platform }}  # [build_platform != target_platform]
+    - cython  # [build_platform != target_platform]
+    - numpy  # [build_platform != target_platform]
   host:
     - python
     - pip
@@ -31,7 +36,6 @@ requirements:
     - pandas
     - jinja2
     # C/C++ libraries
-    - blis
     - bzip2
     - coin-or-cbc
     - coin-or-cgl
@@ -43,10 +47,11 @@ requirements:
     - hdf5
     - icu
     - libaec
+    - libblas  # [not osx]
     - libboost-devel
     - libcurl
     - libiconv
-    - liblapack
+    - liblapack  # [not osx]
     - libxmlpp-4.0
     - libxml2
     - openssl
@@ -55,7 +60,6 @@ requirements:
     - zlib
   run:
     - python
-    - blis
     - pandas
 
 

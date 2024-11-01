@@ -7,7 +7,7 @@ bzip2:
 c_compiler:
 - clang
 c_compiler_version:
-- '17'
+- '18'
 c_stdlib:
 - macosx_deployment_target
 c_stdlib_version:
@@ -29,7 +29,7 @@ coin_or_utils:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '17'
+- '18'
 glib:
 - '2'
 hdf5:
@@ -44,8 +44,6 @@ libcurl:
 - '8'
 libiconv:
 - '1'
-liblapack:
-- 3.9 *netlib
 libxml2:
 - '2'
 macos_machine:
