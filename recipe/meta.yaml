@@ -47,7 +47,7 @@ requirements:
     - hdf5
     - icu
     - libaec
-    - libblas # [not osx]
+    - libblas  # [not osx]
     - libboost-devel
     - libcurl
     - libiconv
