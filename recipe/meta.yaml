@@ -47,11 +47,11 @@ requirements:
     - hdf5
     - icu
     - libaec
-    - libblas
+    - libblas # [not osx]
     - libboost-devel
     - libcurl
     - libiconv
-    - liblapack
+    - liblapack  # [not osx]
     - libxmlpp-4.0
     - libxml2
     - openssl
