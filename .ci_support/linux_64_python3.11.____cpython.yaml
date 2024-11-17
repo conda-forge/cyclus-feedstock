@@ -12,7 +12,7 @@ channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge main
-coincbc:
+coin_or_cbc:
 - '2.10'
 cxx_compiler:
 - gxx
