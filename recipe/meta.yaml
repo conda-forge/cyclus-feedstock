@@ -10,7 +10,7 @@ source:
 
 build:
   number: 5
-  skip: True  # [win or osx or py<=310]
+  skip: True  # [win or osx or py<310]
   detect_binary_files_with_prefix: true
   preserve_egg_dir: True
     
