@@ -108,8 +108,8 @@ jobs:
           NEW_BRANCH=cyclus-${SHORT_SHA}
           echo ${SHORT_SHA}
           echo ${NEW_BRANCH}
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor_id }}"
           git checkout -b ${NEW_BRANCH}
           git add .
           git commit -m "Trigger build for Cyclus commit ${SHORT_SHA}"
