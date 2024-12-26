@@ -102,7 +102,7 @@ jobs:
 
       - name: PR conda-forge/cyclus-feedstock
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.FEEDSTOCK_TOKEN }}
         shell: bash -el {0}
         run: |
           SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
