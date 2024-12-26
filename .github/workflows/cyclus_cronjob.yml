@@ -1,0 +1,125 @@
+name: Rebuild Cyclus
+
+on:
+  schedule:
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync-repo:
+    runs-on: ubuntu-latest
+
+    outputs:
+      has_changes: ${{ steps.check-upstream.outputs.has_changes }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Install GitHub CLI
+        run: |
+          type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+          && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+          && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+          && sudo apt update \
+          && sudo apt install gh -y
+      
+      - name: Authenticate GitHub CLI
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+      
+      - name: Sync repository
+        run: |
+          # Sync main branch
+          gh repo sync bennibbelink/cyclus-feedstock --branch main
+          
+          # Sync dev branch
+          gh repo sync bennibbelink/cyclus-feedstock --branch dev
+      
+      - name: Check for upstream Cyclus changes
+        id: check-upstream
+        run: |
+          LAST_RUN=$(gh run list --workflow "Rebuild Cyclus" --json createdAt --jq '.[1].createdAt' || echo "")
+          if [ -z "$LAST_RUN" ]; then
+            LAST_RUN=$(date -d "24 hours ago" -u +"%Y-%m-%dT%H:%M:%SZ")
+          fi
+          echo $LAST_RUN
+          
+          COMMITS=$(git log --since="$LAST_RUN" --format="%H" | wc -l)
+          
+          if [ "$COMMITS" -gt 0 ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+  create-pr:
+    needs: sync-repo
+    if: needs.sync-repo.outputs.has_changes == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Install GitHub CLI
+        run: |
+          type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+          && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+          && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+          && sudo apt update \
+          && sudo apt install gh -y
+      
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniforge-version: "latest"
+          conda-solver: "libmamba"
+          auto-update-conda: true
+          channels: conda-forge
+
+      - name: Increment build number and rerender
+        shell: bash -el {0}
+        run: |
+          mamba install -y conda-smithy
+          BUILD_NUMBER=$(sed -n 's/^[[:space:]]*number:[[:space:]]*\([0-9][0-9]*\).*/\1/p' recipe/meta.yaml)
+          NEW_BUILD_NUMBER=$((BUILD_NUMBER + 1))
+          echo "NEW_BUILD_NUMBER=${NEW_BUILD_NUMBER}"
+          sed -i "s/^\([[:space:]]*number:[[:space:]]*\)[0-9][0-9]*/\1$NEW_BUILD_NUMBER/" recipe/meta.yaml
+          conda-smithy rerender
+
+      - name: PR conda-forge/cyclus-feedstock
+        env:
+          GH_TOKEN: ${{ secrets.FEEDSTOCK_TOKEN }}
+        shell: bash -el {0}
+        run: |
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          NEW_BRANCH=cyclus-${SHORT_SHA}
+          echo ${SHORT_SHA}
+          echo ${NEW_BRANCH}
+          git checkout -b ${NEW_BRANCH}
+          git add .
+          git commit -m "Trigger build for Cyclus commit ${SHORT_SHA}"
+          git push --set-upstream origin ${NEW_BRANCH}
+          gh pr create \
+            --repo conda-forge/cyclus-feedstock \
+            --base dev \
+            --draft \
+            --label automerge \
+            --title "Cyclus commit \`main - ${SHORT_SHA}\`" \
+            --body "Auto-triggered PR from a push to Cyclus \`main\` branch.  If CI passes this will be merged automatically."
+
+
+
