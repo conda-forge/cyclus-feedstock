@@ -98,6 +98,8 @@ jobs:
           conda-smithy rerender
 
       - name: PR conda-forge/cyclus-feedstock
+        env:
+          GH_TOKEN: ${{ github.token }}
         shell: bash -el {0}
         run: |
           SHORT_SHA=$(echo ${{github.sha}} | cut -c1-7)
