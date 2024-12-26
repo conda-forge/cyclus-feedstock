@@ -34,10 +34,10 @@ jobs:
       - name: Sync repository
         run: |
           # Sync main branch
-          gh repo sync cyclus/cyclus-feedstock --branch main
+          gh repo sync bennibbelink/cyclus-feedstock --branch main
           
           # Sync dev branch
-          gh repo sync cyclus/cyclus-feedstock --branch dev
+          gh repo sync bennibbelink/cyclus-feedstock --branch dev
       
       - name: Check for upstream Cyclus changes
         id: check-upstream
