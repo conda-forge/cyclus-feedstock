@@ -60,6 +60,8 @@ jobs:
     needs: sync-repo
     if: needs.sync-repo.outputs.has_changes == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     
     steps:
       - name: Checkout repository
@@ -102,7 +104,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         shell: bash -el {0}
         run: |
-          SHORT_SHA=$(echo ${{github.sha}} | cut -c1-7)
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
           NEW_BRANCH=cyclus-${SHORT_SHA}
           echo ${SHORT_SHA}
           echo ${NEW_BRANCH}
