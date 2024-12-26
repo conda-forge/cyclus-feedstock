@@ -9,7 +9,7 @@ source:
   git_rev: main
 
 build:
-  number: 5
+  number: 6
   skip: true  # [win or py<310]
   detect_binary_files_with_prefix: true
   preserve_egg_dir: true
