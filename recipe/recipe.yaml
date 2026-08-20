@@ -1,0 +1,80 @@
+schema_version: 1
+
+context:
+  version: "1.6.0"
+
+package:
+  name: cyclus
+  version: ${{ version }}
+
+source:
+  git: https://github.com/cyclus/cyclus.git
+  rev: "1.6.0"
+
+build:
+  number: 5
+  skip: win or osx or match(python, "<3.12")
+  prefix_detection:
+    ignore_binary_files: true
+
+requirements:
+  build:
+    - cmake
+    - make
+    - ${{ stdlib('c') }}
+    - ${{ compiler('c') }}
+    - ${{ compiler('cxx') }}
+  host:
+    - glib
+    - pkg-config
+    - coin-or-cbc
+    - libboost-devel
+    - libxmlpp-4.0
+    - hdf5
+    - sqlite
+    - python
+    - pandas
+    - jinja2
+    - cython
+    - pip
+    - setuptools
+    - pprintpp
+  run:
+    - coin-or-cbc
+    - libboost-devel
+    - libxmlpp-4.0
+    - libxml2
+    - blis
+    - liblapack
+    - hdf5
+    - sqlite
+    - glib
+    - python
+    - pandas
+    - python
+    - cython
+    - jinja2
+    - pip
+    - setuptools
+    - pprintpp
+
+tests:
+  - script: 
+      - cyclus_unit_tests
+      - pytest
+
+
+about:
+  license: BSD-3-Clause
+  license_file: LICENSE.rst
+  summary: The agent-based fuel cycle simulator.
+  homepage: http://fuelcycle.org/
+
+extra:
+  recipe-maintainers:
+    - gonuke
+    - katyhuff
+    - FlanFlanagan
+    - bennibbelink
+    - munkm
+    - abachma2
