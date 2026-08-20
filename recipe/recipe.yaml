@@ -1,0 +1,119 @@
+schema_version: 1
+
+context:
+  version: "1.6.0"
+
+package:
+  name: cyclus
+  version: ${{ version }}
+
+source:
+  url: https://github.com/cyclus/cyclus/archive/${{ version }}.tar.gz
+  sha256: 7105437182e8b39d27b9c89daec60c8a582113022ba9d8b409ce0df0a9cf50ce
+
+build:
+  number: 6
+  skip:
+    - win
+    - osx
+
+requirements:
+  build:
+    - ${{ stdlib("c") }}
+    - ${{ compiler("cxx") }}
+    - cmake
+    - make
+    - pkg-config
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - cython
+    - jinja2
+  host:
+    - coincbc
+    - libboost-devel
+    - libxmlpp-4.0
+    - libxml2
+    - liblapack
+    - blis
+    - hdf5
+    - sqlite
+    - glib
+    - python
+    - pandas
+    - pip
+    - pprintpp
+    - cython
+  run:
+    - coincbc
+    - libboost-devel
+    - libxmlpp-4.0
+    - libxml2
+    - liblapack
+    - blis
+    - hdf5
+    - sqlite
+    - glib
+    - python
+    - pandas
+    - python
+    - pprintpp
+
+tests:
+  - package_contents:
+      bin:
+        - cyclus
+        - cycpp.py
+      files:
+        - share/cyclus/cyclus_default_unit_test_driver.cc
+        - share/cyclus/cyclus-flat.rng.in
+        - share/cyclus/cyclus_nuc_data.h5
+        - share/cyclus/cyclus.rng.in
+        - share/cyclus/dbtypes.json
+
+  - files:
+      source:
+        - tests
+        - share/dbtypes.json
+        - src/hdf5_back_gen.py
+    requirements:
+      run:
+        - which
+        - cxx-compiler
+        - pytest
+        - pytables
+    script:
+      - which cyclus
+
+      - cyclus --version
+      - cyclus --path
+      - cyclus --include
+      - cyclus --install-path
+      - cyclus --cmake-module-path
+      - cyclus --build-path
+      - cyclus --rng-schema
+      - cyclus --nuc-data
+
+      - cyclus_unit_tests
+
+      - cd tests
+      - pytest -vv
+
+about:
+  license: BSD-3-Clause
+  license_file: LICENSE.rst
+  summary: The agent-based fuel cycle simulator.
+  homepage: https://fuelcycle.org/
+  repository: http://github.com/cyclus/cyclus
+  documentation: https://fuelcycle.org/
+
+extra:
+  recipe-maintainers:
+    - matthewfeickert
+    - gonuke
+    - katyhuff
+    - FlanFlanagan
+    - bennibbelink
+    - munkm
+    - abachma2

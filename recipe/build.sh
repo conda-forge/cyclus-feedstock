@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-set -e
+
+set -ex
 
 if [ "$(uname)" == "Darwin" ]; then
   # other
