@@ -9,7 +9,7 @@ source:
   git_rev: 1.6.0
 
 build:
-  number: 5
+  number: 6
   skip: True  # [win or osx or py<310]
   detect_binary_files_with_prefix: true
   preserve_egg_dir: True
@@ -25,7 +25,7 @@ requirements:
     - coincbc
     - libboost-devel
     - libxmlpp-4.0
-    - libxml2
+    - libxml2-devel
     - liblapack
     - hdf5
     - sqlite
@@ -40,7 +40,7 @@ requirements:
     - coincbc
     - libboost-devel
     - libxmlpp-4.0
-    - libxml2
+    - libxml2-devel
     - liblapack
     - blis
     - hdf5
@@ -55,7 +55,7 @@ requirements:
     - coincbc
     - libboost-devel
     - libxmlpp-4.0
-    - libxml2
+    - libxml2-devel
     - liblapack
     - blis
     - hdf5
