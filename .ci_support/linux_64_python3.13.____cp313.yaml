@@ -12,7 +12,7 @@ channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge main
-coincbc:
+coin_or_cbc:
 - '2.10'
 cxx_compiler:
 - gxx
@@ -25,9 +25,9 @@ glib:
 hdf5:
 - 1.14.4
 libboost_devel:
-- '1.84'
+- '1.86'
 liblapack:
-- 3.9 *netlib
+- 3.9.* *netlib
 libxml2:
 - '2'
 pin_run_as_build:

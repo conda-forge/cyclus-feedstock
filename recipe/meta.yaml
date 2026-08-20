@@ -9,7 +9,7 @@ source:
   git_rev: 1.6.0
 
 build:
-  number: 5
+  number: 6
   skip: True  # [win or osx or py<310]
   detect_binary_files_with_prefix: true
   preserve_egg_dir: True
@@ -22,48 +22,27 @@ requirements:
     - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - coincbc
-    - libboost-devel
-    - libxmlpp-4.0
-    - libxml2
-    - liblapack
-    - hdf5
-    - sqlite
-    - glib
+  host:
     - python
-    - pandas
-    - jinja2
-    - cython
     - pip
     - setuptools
-  host:
-    - coincbc
+    - coin-or-cbc
     - libboost-devel
     - libxmlpp-4.0
     - libxml2
     - liblapack
     - blis
     - hdf5
+    - jinja2
     - sqlite
     - glib
-    - python
     - pandas
-    - python
     - pprintpp
     - cython
   run:
-    - coincbc
-    - libboost-devel
-    - libxmlpp-4.0
-    - libxml2
-    - liblapack
     - blis
-    - hdf5
-    - sqlite
-    - glib
     - python
     - pandas
-    - python
     - pprintpp
 
 test:
@@ -82,6 +61,7 @@ about:
   license: BSD-3-Clause
   license_file: LICENSE.rst
   summary: "The agent-based fuel cycle simulator."
+  dev_url: https://github.com/cyclus/cyclus
 
 extra:
   recipe-maintainers:
