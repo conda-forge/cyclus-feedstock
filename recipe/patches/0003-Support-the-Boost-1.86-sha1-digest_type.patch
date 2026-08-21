@@ -1,0 +1,45 @@
+From a6fa53e1818c28bf4b7e6ea3376c9f4190a1d64a Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@wisc.edu>
+Date: Thu, 20 Aug 2026 14:52:08 -0600
+Subject: [PATCH] Support the Boost >= 1.86 sha1 digest_type
+
+Boost 1.86 changed boost::uuids::detail::sha1::digest_type from
+unsigned int[5] to unsigned char[20] (the same words serialized
+big-endian), so Sha1::digest() no longer compiles against current
+Boost. Repack the bytes into the existing unsigned int[5] Digest
+layout so digest values (persisted as HDF5 keys) are unchanged.
+
+Minimal backport of the fix that landed upstream for cyclus 1.7 in
+cyclus/cyclus commits 356ebd2d7b..98bbbd6a54 (Nov 2024), which also
+changed Digest to a std::array and is too invasive to backport whole.
+---
+ src/query_backend.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/src/query_backend.h b/src/query_backend.h
+index 51725ea..2eb6281 100644
+--- a/src/query_backend.h
++++ b/src/query_backend.h
+@@ -1087,7 +1087,22 @@ class Sha1 {
+ 
+   Digest digest() {
+     Digest d;
++#if BOOST_VERSION >= 108600
++    // Boost 1.86 changed sha1::digest_type from unsigned int[5] to
++    // unsigned char[20], holding the same five words serialized big-endian.
++    // Repack them into the unsigned int[5] layout that Digest (and the HDF5
++    // backend, which persists digests as keys) has always used.
++    unsigned char bytes[CYCLUS_SHA1_SIZE];
++    hash_.get_digest(bytes);
++    for (int i = 0; i < CYCLUS_SHA1_NINT; ++i) {
++      d.val[i] = (static_cast<unsigned int>(bytes[4 * i]) << 24) |
++                 (static_cast<unsigned int>(bytes[4 * i + 1]) << 16) |
++                 (static_cast<unsigned int>(bytes[4 * i + 2]) << 8) |
++                  static_cast<unsigned int>(bytes[4 * i + 3]);
++    }
++#else
+     hash_.get_digest(d.val);
++#endif
+     return d;
+   }
+ 

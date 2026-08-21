@@ -1,0 +1,11 @@
+# Build Python 3.10 against hdf5 1.14.4 and every other Python version against
+# the conda-forge global hdf5 pin.
+#
+# A recipe-level variant file cannot zip an extra key onto the global pinning's
+# `python` zip group (conda-build allows a key in only one zip_keys group), so
+# both hdf5 values are listed here, the full python x hdf5 matrix is rendered,
+# and the unwanted combinations are dropped by the `build.skip` conditions in
+# recipe.yaml. Keep the second entry in sync with the global hdf5 pin.
+hdf5:
+  - 1.14.4
+  - 1.14.6

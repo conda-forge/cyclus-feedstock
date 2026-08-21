@@ -1,0 +1,22 @@
+From 723619f30192605332e5565187322c1b38ae19e5 Mon Sep 17 00:00:00 2001
+From: bennibbelink <79653949+bennibbelink@users.noreply.github.com>
+Date: Wed, 2 Oct 2024 07:51:34 -0400
+Subject: [PATCH] make dirty_quantity_ mutable
+
+---
+ src/toolkit/res_map.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/toolkit/res_map.h b/src/toolkit/res_map.h
+index fe05da5355..009724fb22 100644
+--- a/src/toolkit/res_map.h
++++ b/src/toolkit/res_map.h
+@@ -233,7 +233,7 @@ class ResMap {
+   }
+ 
+   /// Whether quantity_ should be recomputed or not.
+-  bool dirty_quantity_;
++  mutable bool dirty_quantity_;
+ 
+   /// Current total quantity of all resources in the mapping.
+   double quantity_;

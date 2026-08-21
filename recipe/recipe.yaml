@@ -1,0 +1,148 @@
+schema_version: 1
+
+context:
+  version: "1.6.0"
+
+package:
+  name: cyclus
+  version: ${{ version }}
+
+source:
+  url: https://github.com/cyclus/cyclus/archive/${{ version }}.tar.gz
+  sha256: 7105437182e8b39d27b9c89daec60c8a582113022ba9d8b409ce0df0a9cf50ce
+  patches:
+    # cyclus 1.6.0 only probes libxml++-4.0/-2.6; conda-forge's libxmlpp-4.0 is
+    # unmaintained (pinned libxml2 <2.14, no linux-aarch64) so build against 5.0
+    - patches/0001-Add-support-for-libxml-5.0.patch
+    # GCC 15 rejects the const-method write; upstream cyclus/cyclus@723619f301
+    - patches/0002-make-dirty_quantity_-mutable.patch
+    # Boost >= 1.86 changed sha1::digest_type; minimal backport of the 1.7 fix
+    - patches/0003-Support-the-Boost-1.86-sha1-digest_type.patch
+    # keep LDFLAGS (-L$PREFIX/lib, rpath) when linking shared libs
+    - patches/0004-Append-to-CMAKE_SHARED_LINKER_FLAGS-instead-of-replacing-it.patch
+    # Boost >= 1.86 uuid is no longer brace-initialisable; upstream cyclus/cyclus@e77848ce86
+    - patches/0005-construct-uuid-correctly.patch
+    # (int)1e299 is INT_MIN with GCC 15, hanging MixedActiveDormant; upstream cyclus/cyclus@9c2e0196b0
+    - patches/0006-Do-not-pass-1e299-as-an-int-bound.patch
+
+build:
+  number: 6
+  skip:
+    - win
+    - osx
+    # hdf5 1.14.4 is only for Python 3.10; everything else uses the global pin
+    # (both values come from variants.yaml)
+    - match(python, "3.10.*") and hdf5 != "1.14.4"
+    - not match(python, "3.10.*") and hdf5 == "1.14.4"
+
+requirements:
+  build:
+    - ${{ stdlib("c") }}
+    - ${{ compiler("cxx") }}
+    - cmake 3.*
+    - make
+    - pkg-config
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - cython <3.1
+  host:
+    - coin-or-cbc
+    - libboost-devel
+    - libxmlpp
+    - libxml2
+    # headers and the libxml2.so dev symlink moved out of libxml2 in 2.14
+    - libxml2-devel
+    - liblapack
+    - blis
+    - hdf5
+    - sqlite
+    - glib
+    - python
+    - pandas
+    - pprintpp
+    # the .pyx sources still use Python 2 era idioms (PyString_*, long) that
+    # Cython 3.1 removed
+    - cython <3.1
+    # build-time code generation runs under the host python; keeping jinja2 out
+    # of build: avoids a second interpreter in BUILD_PREFIX that CMake finds first
+    - jinja2
+    # cyclus/gentypesystem.py imports distutils, gone from the stdlib in py3.12
+    - setuptools
+    # CMakeLists.txt installs the pure-python package with `python -m pip install
+    # --no-deps --target=$SP_DIR .` at `make install` time (a failure there is
+    # non-fatal); rattler-build's PIP_NO_BUILD_ISOLATION/PIP_NO_INDEX keep it offline
+    - pip
+  run:
+    - coin-or-cbc
+    - libboost-devel
+    - libxmlpp
+    - libxml2
+    - liblapack
+    - blis
+    - hdf5
+    - sqlite
+    - glib
+    - python
+    - pandas
+    - python
+    - pprintpp
+
+tests:
+  - package_contents:
+      bin:
+        - cyclus
+        - cycpp.py
+      files:
+        - share/cyclus/cyclus_default_unit_test_driver.cc
+        - share/cyclus/cyclus-flat.rng.in
+        - share/cyclus/cyclus_nuc_data.h5
+        - share/cyclus/cyclus.rng.in
+        - share/cyclus/dbtypes.json
+
+  - files:
+      source:
+        - tests
+        - share/dbtypes.json
+        - src/hdf5_back_gen.py
+    requirements:
+      run:
+        - which
+        - cxx-compiler
+        - pytest
+        - pytables
+    script:
+      - which cyclus
+
+      - cyclus --version
+      - cyclus --path
+      - cyclus --include
+      - cyclus --install-path
+      - cyclus --cmake-module-path
+      - cyclus --build-path
+      - cyclus --rng-schema
+      - cyclus --nuc-data
+
+      - cyclus_unit_tests
+
+      - cd tests
+      - pytest -vv
+
+about:
+  license: BSD-3-Clause
+  license_file: LICENSE.rst
+  summary: The agent-based fuel cycle simulator.
+  homepage: https://fuelcycle.org/
+  repository: http://github.com/cyclus/cyclus
+  documentation: https://fuelcycle.org/
+
+extra:
+  recipe-maintainers:
+    - matthewfeickert
+    - gonuke
+    - katyhuff
+    - FlanFlanagan
+    - bennibbelink
+    - munkm
+    - abachma2

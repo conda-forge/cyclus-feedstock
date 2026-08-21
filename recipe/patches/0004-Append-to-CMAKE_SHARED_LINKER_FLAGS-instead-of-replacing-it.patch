@@ -1,0 +1,27 @@
+From 328f5b3323a4c011b35042b59912ae07ecef0ccb Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@wisc.edu>
+Date: Thu, 20 Aug 2026 14:52:08 -0600
+Subject: [PATCH] Append to CMAKE_SHARED_LINKER_FLAGS instead of replacing it
+
+CMake seeds CMAKE_SHARED_LINKER_FLAGS from the LDFLAGS environment
+variable. Overwriting it discards those flags, so with conda-forge's
+toolchain every shared library (including the Cython modules) was
+linked without -L$PREFIX/lib and the -rpath/hardening flags; the
+pkg-config supplied bare -lxml++-5.0 and -lxml2 then fail to resolve.
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 80439f3..f0d5e47 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -131,7 +131,7 @@ IF(NOT CYCLUS_DOC_ONLY)
+         set(suffix ".dylib")
+         set(dynamicloadlib "unix_helper_functions.h")
+     ELSE()
+-        set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--allow-shlib-undefined")
++        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--allow-shlib-undefined")
+         set(suffix ".so")
+         set(dynamicloadlib "unix_helper_functions.h")
+     ENDIF()

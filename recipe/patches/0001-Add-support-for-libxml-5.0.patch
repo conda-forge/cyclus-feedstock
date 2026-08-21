@@ -1,0 +1,89 @@
+From b5c2c991554bc89c438e12dcd5fe19dc429b4a73 Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@wisc.edu>
+Date: Thu, 20 Aug 2026 14:37:23 -0600
+Subject: [PATCH] Add support for libxml++-5.0
+
+libxml++ 5.0 dropped its glibmm dependency and replaced Glib::ustring
+with xmlpp::ustring (an alias for std::string). Probe pkg-config for
+libxml++-5.0 first and replace the only explicit Glib::ustring uses
+with std::string, which is accepted by the libxml++ 2.6, 4.0 and 5.0
+APIs alike. Glib::ustring::bytes() has no std::string counterpart;
+std::string::size() is the byte count for a std::string.
+
+This is needed on conda-forge, where libxmlpp-4.0 is unmaintained
+(pinned to libxml2 <2.14, no linux-aarch64 build) and only
+libxmlpp-5.0 is available against libxml2 2.14.
+---
+ CMakeLists.txt            | 5 ++++-
+ src/relax_ng_validator.cc | 4 ++--
+ src/relax_ng_validator.h  | 4 ++--
+ tests/xml_parser_tests.cc | 2 +-
+ 4 files changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dbc0077..80439f3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -179,7 +179,10 @@ IF(NOT CYCLUS_DOC_ONLY)
+     message("-- LibXML2 Include Dir: ${LIBXML2_INCLUDE_DIR}")
+ 
+     # Then use pkg-config for locate specific package
+-    pkg_check_modules(LIBXMLXX IMPORTED_TARGET libxml++-4.0)
++    pkg_check_modules(LIBXMLXX IMPORTED_TARGET libxml++-5.0)
++    IF ( NOT LIBXMLXX_LIBRARIES )
++       pkg_check_modules(LIBXMLXX IMPORTED_TARGET libxml++-4.0)
++    ENDIF ( NOT LIBXMLXX_LIBRARIES )
+     IF ( NOT LIBXMLXX_LIBRARIES )
+        pkg_check_modules(LIBXMLXX REQUIRED IMPORTED_TARGET libxml++-2.6)
+     ENDIF ( NOT LIBXMLXX_LIBRARIES )
+diff --git a/src/relax_ng_validator.cc b/src/relax_ng_validator.cc
+index 2ddf8a8..b55fc13 100644
+--- a/src/relax_ng_validator.cc
++++ b/src/relax_ng_validator.cc
+@@ -36,9 +36,9 @@ void RelaxNGValidator::parse_context(xmlRelaxNGParserCtxtPtr context) {
+ }
+ 
+ // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-void RelaxNGValidator::parse_memory(const Glib::ustring& contents) {
++void RelaxNGValidator::parse_memory(const std::string& contents) {
+   xmlRelaxNGParserCtxtPtr context =
+-    xmlRelaxNGNewMemParserCtxt(contents.c_str(), contents.bytes());
++    xmlRelaxNGNewMemParserCtxt(contents.c_str(), contents.size());
+   parse_context(context);
+ }
+ 
+diff --git a/src/relax_ng_validator.h b/src/relax_ng_validator.h
+index cb3fc8c..ed5c5f0 100644
+--- a/src/relax_ng_validator.h
++++ b/src/relax_ng_validator.h
+@@ -11,7 +11,7 @@
+ #ifndef CYCLUS_SRC_RELAX_NG_VALIDATOR_H_
+ #define CYCLUS_SRC_RELAX_NG_VALIDATOR_H_
+ 
+-#include <glibmm/ustring.h>
++#include <string>
+ 
+ class _xmlRelaxNG;
+ class _xmlRelaxNGParserCtxt;
+@@ -40,7 +40,7 @@ class RelaxNGValidator {
+ 
+   /// parse a relaxng schema xml file
+   /// @param contents the contents of the xml file
+-  void parse_memory(const Glib::ustring& contents);
++  void parse_memory(const std::string& contents);
+ 
+   /// validate an xml file agaisnt the given schema
+   /// @param doc the xml file document
+diff --git a/tests/xml_parser_tests.cc b/tests/xml_parser_tests.cc
+index 76e9baa..f458f1b 100644
+--- a/tests/xml_parser_tests.cc
++++ b/tests/xml_parser_tests.cc
+@@ -104,7 +104,7 @@ TEST_F(XMLParserTests, XInclude) {
+   xmlpp::Document* doc = parser.Document();
+ 
+   // test that the subsititution happened
+-  Glib::ustring obs = doc->write_to_string();
++  std::string obs = doc->write_to_string();
+   stringstream exp("");
+   exp << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+       << "<document xmlns:xi=\"http://www.w3.org/2003/XInclude\">\n"
