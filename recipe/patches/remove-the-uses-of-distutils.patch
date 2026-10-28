@@ -1,0 +1,53 @@
+From dc1b04b9fb447a9a7f11f012a4f86903953de684 Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Fri, 9 Oct 2026 10:36:04 -0600
+Subject: [PATCH] build: Remove the uses of distutils
+
+setup.py imported setup from distutils.core, and gentypesystem.py
+imported core and dir_util from distutils without using them. distutils
+was removed from the standard library in Python 3.12. The imports only
+kept working because setuptools installs a path hook
+(distutils-precedence.pth) that makes "import distutils" resolve to the
+copy of distutils that setuptools has, and that hook is not active in
+every installation:
+
+    ModuleNotFoundError: No module named 'distutils'
+
+Import setup from setuptools in setup.py, which does not depend on the
+hook, and remove the unused import from gentypesystem.py.
+
+Assisted-by: ClaudeCode:claude-opus-5-5
+---
+ cyclus/gentypesystem.py | 1 -
+ setup.py                | 3 +--
+ 2 files changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/cyclus/gentypesystem.py b/cyclus/gentypesystem.py
+index 0fba0468..c339a0ee 100644
+--- a/cyclus/gentypesystem.py
++++ b/cyclus/gentypesystem.py
+@@ -17,7 +17,6 @@ import warnings
+ import itertools
+ import subprocess
+ from glob import glob
+-from distutils import core, dir_util
+ from pprint import pprint, pformat
+ from collections import defaultdict
+ if sys.version_info[0] > 2:
+diff --git a/setup.py b/setup.py
+index 66fac232..901638da 100644
+--- a/setup.py
++++ b/setup.py
+@@ -2,8 +2,7 @@ from __future__ import print_function, unicode_literals
+ import re
+ import os
+ import sys
+-from distutils.core import setup
+-import setuptools
++from setuptools import setup
+ from pprint import pprint
+ 
+ PROJECT = 'cyclus'
+-- 
+2.56.0
+

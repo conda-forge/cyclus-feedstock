@@ -32,6 +32,9 @@ source:
     - patches/remove-the-unused-cimport-of-PyString_FromString.patch
     - patches/remove-the-checks-for-the-Python-2-long-type-in-nucname.patch
     - patches/call-annotations-of-the-agent-shims-through-the-Agent-base-class.patch
+    # distutils was removed from the stdlib in Python 3.12; upstream
+    # cyclus/cyclus@dc1b04b9fb from https://github.com/cyclus/cyclus/pull/1985
+    - patches/remove-the-uses-of-distutils.patch
 
 build:
   number: 6
