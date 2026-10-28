@@ -63,7 +63,6 @@ build:
   number: 6
   skip:
     - win
-    - osx
 
 requirements:
   build:
