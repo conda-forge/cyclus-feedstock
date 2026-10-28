@@ -35,6 +35,12 @@ source:
     # distutils was removed from the stdlib in Python 3.12; upstream
     # cyclus/cyclus@dc1b04b9fb from https://github.com/cyclus/cyclus/pull/1985
     - patches/remove-the-uses-of-distutils.patch
+    # on macOS only the cyclus executable linked libpython, and -dead_strip_dylibs
+    # drops it there as cyclus.cc uses no Python symbols itself, so dyld aborts on
+    # the Python symbols of libcyclus; link libcyclus to libpython on every
+    # platform as upstream cyclus/cyclus@2b5d4bc09f from
+    # https://github.com/cyclus/cyclus/pull/1814
+    - patches/only-link-libcyclus-explicitly-to-python-libraries.patch
 
 build:
   number: 6
