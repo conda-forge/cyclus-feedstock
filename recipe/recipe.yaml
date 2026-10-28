@@ -60,7 +60,7 @@ source:
     - patches/look-for-library-with-platform-specific-file-extension.patch
 
 build:
-  number: 6
+  number: 7
   skip:
     - win
 
