@@ -10,6 +10,10 @@ package:
 source:
   url: https://github.com/cyclus/cyclus/archive/${{ version }}.tar.gz
   sha256: 7105437182e8b39d27b9c89daec60c8a582113022ba9d8b409ce0df0a9cf50ce
+  patches:
+    # GCC 15 rejects the const-method write; upstream cyclus/cyclus@723619f301
+    # from https://github.com/cyclus/cyclus/pull/1814
+    - patches/make-dirty_quantity_-mutable.patch
 
 build:
   number: 6
