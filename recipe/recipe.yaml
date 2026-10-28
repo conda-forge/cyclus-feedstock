@@ -132,9 +132,14 @@ requirements:
     - python
     - pandas
     - pprintpp
+  run_exports:
+    # downstream archetype libraries (e.g. cycamore) link to libcyclus
+    - ${{ pin_subpackage("cyclus", upper_bound="x.x") }}
 
 tests:
   - package_contents:
+      lib:
+        - cyclus
       bin:
         - cyclus
         - cycpp.py
