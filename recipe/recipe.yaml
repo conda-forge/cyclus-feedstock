@@ -45,6 +45,12 @@ source:
     # eventhooks, and pyinfile modules were installed to site-packages as .dylib;
     # upstream cyclus/cyclus@26a7eef5a6 from https://github.com/cyclus/cyclus/pull/1814
     - patches/create-so-symlink-to-libraries-instead-of-second-installation.patch
+    # with the default two-level namespace on macOS, libcyclus binds its Python
+    # symbols to libpython, a second copy of the interpreter in a python process
+    # (the conda-forge python executable links Python statically), which
+    # segfaults on import; upstream cyclus/cyclus@427c5440ef from
+    # https://github.com/cyclus/cyclus/pull/1814
+    - patches/add-flat_namespace-flag-on-macos.patch
 
 build:
   number: 6
