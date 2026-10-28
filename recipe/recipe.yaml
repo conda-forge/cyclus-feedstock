@@ -45,6 +45,8 @@ build:
 requirements:
   build:
     - ${{ stdlib("c") }}
+    # the PyNE CRAM solver (cram.c) is C
+    - ${{ compiler("c") }}
     - ${{ compiler("cxx") }}
     - cmake
     - make
