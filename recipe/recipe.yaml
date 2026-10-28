@@ -33,8 +33,16 @@ requirements:
   host:
     - coin-or-cbc
     - libboost-devel
-    - libxmlpp-4.0
+    # headers and libxml++-4.0.pc moved out of libxmlpp-4.0 into libxmlpp-devel
+    # in build 4; 5.x is libxml++-5.0, which cyclus does not probe for
+    - libxmlpp-devel 4.*
+    # libxml++-4.0 is built on glibmm and cyclus links to libglibmm-2.68 directly
+    # (Glib::ustring in relax_ng_validator.h); listed so its run_export applies
+    # rather than relying on it arriving through libxmlpp-devel
+    - glibmm-2.68
     - libxml2
+    # headers and the libxml2.so dev symlink moved out of libxml2 in 2.14
+    - libxml2-devel
     - liblapack
     - blis
     - hdf5
@@ -48,7 +56,8 @@ requirements:
   run:
     - coin-or-cbc
     - libboost-devel
-    - libxmlpp-4.0
+    # the installed headers include libxml++ and glibmm headers
+    - libxmlpp-devel 4.*
     - libxml2
     - liblapack
     - blis
