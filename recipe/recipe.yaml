@@ -31,7 +31,7 @@ requirements:
         - cython
     - jinja2
   host:
-    - coincbc
+    - coin-or-cbc
     - libboost-devel
     - libxmlpp-4.0
     - libxml2
@@ -46,7 +46,7 @@ requirements:
     - pprintpp
     - cython
   run:
-    - coincbc
+    - coin-or-cbc
     - libboost-devel
     - libxmlpp-4.0
     - libxml2
