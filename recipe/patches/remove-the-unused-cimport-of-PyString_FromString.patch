@@ -1,0 +1,49 @@
+From 7ca5ef63484e32acd47cdb0f5dfde45c2bd864a0 Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Thu, 8 Oct 2026 14:35:49 -0600
+Subject: [PATCH] fix: Remove the unused cimport of PyString_FromString
+
+agents.pyx and memback.pyx cimport PyString_FromString from cpython.
+It only exists in the Python 2 C API, and Cython 3.1 and newer no
+longer declare it, so neither file compiles with them:
+
+    'cpython/PyString_FromString.pxd' not found
+
+Neither file uses it, so the cimport is removed.
+
+Refs: https://github.com/cyclus/cyclus Issue 1848
+Assisted-by: ClaudeCode:claude-opus-5-5
+---
+ cyclus/agents.pyx  | 2 +-
+ cyclus/memback.pyx | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cyclus/agents.pyx b/cyclus/agents.pyx
+index dffb0553..95b32401 100644
+--- a/cyclus/agents.pyx
++++ b/cyclus/agents.pyx
+@@ -11,7 +11,7 @@ from cython.operator cimport dereference as deref
+ cimport cython
+ 
+ from cpython cimport (PyObject, PyDict_New, PyDict_Contains,
+-    PyDict_GetItemString, PyDict_SetItemString, PyString_FromString,
++    PyDict_GetItemString, PyDict_SetItemString,
+     PyBytes_FromString, PyDict_GetItem, PyDict_SetItem, PyObject_GetAttrString)
+ 
+ import json
+diff --git a/cyclus/memback.pyx b/cyclus/memback.pyx
+index 3c6106d6..a308405c 100644
+--- a/cyclus/memback.pyx
++++ b/cyclus/memback.pyx
+@@ -8,7 +8,7 @@ from libcpp.string cimport string as std_string
+ from libcpp cimport bool as cpp_bool
+ 
+ from cpython cimport (PyObject, PyDict_New, PyDict_Contains,
+-    PyDict_GetItemString, PyDict_SetItemString, PyString_FromString,
++    PyDict_GetItemString, PyDict_SetItemString,
+     PyBytes_FromString, PyDict_GetItem, PyDict_SetItem)
+ 
+ from cyclus cimport cpp_cyclus
+-- 
+2.56.0
+

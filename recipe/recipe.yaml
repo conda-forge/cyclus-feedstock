@@ -25,6 +25,13 @@ source:
     # (int)1e299 is INT_MIN with GCC 15, hanging MixedActiveDormant; upstream
     # cyclus/cyclus@9c2e0196b0 from https://github.com/cyclus/cyclus/pull/1757
     - patches/do-not-pass-1e299-as-an-int-bound.patch
+    # Cython 3.1 removed the PyString_* cimports, the `long` builtin, and the
+    # ambiguous annotations() overload; upstream cyclus/cyclus@7ca5ef6348,
+    # cyclus/cyclus@af9421daf4, and cyclus/cyclus@2f3c175e0a from
+    # https://github.com/cyclus/cyclus/pull/1985
+    - patches/remove-the-unused-cimport-of-PyString_FromString.patch
+    - patches/remove-the-checks-for-the-Python-2-long-type-in-nucname.patch
+    - patches/call-annotations-of-the-agent-shims-through-the-Agent-base-class.patch
 
 build:
   number: 6
