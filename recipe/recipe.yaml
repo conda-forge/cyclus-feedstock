@@ -55,6 +55,9 @@ source:
     # keep LDFLAGS (-L$PREFIX/lib) when linking shared libs on macOS; upstream
     # cyclus/cyclus@c768b40bb2 from https://github.com/cyclus/cyclus/pull/1970
     - patches/changed-CMakeLists.txt-to-address-the-MacOS-CI-tests-failing.patch
+    # test_env.py looks for libagents.so, which is libagents.dylib on macOS;
+    # upstream cyclus/cyclus@776efd5b32 from https://github.com/cyclus/cyclus/pull/1814
+    - patches/look-for-library-with-platform-specific-file-extension.patch
 
 build:
   number: 6
