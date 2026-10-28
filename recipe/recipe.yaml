@@ -48,6 +48,10 @@ requirements:
     - sqlite
     - glib
     - python
+    # cyclus embeds the interpreter and links to libpython, which is a separate
+    # package from Python 3.15 on (https://conda-forge.org/blog/2026/09/03/python-315/);
+    # for older versions python already depends on the matching libpython
+    - libpython
     - pandas
     - pprintpp
     - cython
