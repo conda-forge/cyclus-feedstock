@@ -1,0 +1,55 @@
+From 2b5d4bc09ff68ba4a8ab205e3dabac0539da2edb Mon Sep 17 00:00:00 2001
+From: bennibbelink <79653949+bennibbelink@users.noreply.github.com>
+Date: Wed, 2 Oct 2024 07:50:51 -0400
+Subject: [PATCH] only link libcyclus explicitly to python libraries
+
+---
+ CMakeLists.txt     | 3 ---
+ cli/CMakeLists.txt | 3 ---
+ src/CMakeLists.txt | 2 +-
+ 3 files changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 34fe8c7..580baed 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -314,9 +314,6 @@ IF(NOT CYCLUS_DOC_ONLY)
+     endif()
+     message("-- PYTHON_EXECUTABLE: ${Python3_EXECUTABLE}")
+     message("-- PYTHON_SITE_PACKAGES: ${PYTHON_SITE_PACKAGES}")
+-    IF (NOT APPLE)
+-        set(LIBS ${LIBS} ${Python3_LIBRARIES})
+-    ENDIF (NOT APPLE)
+ 
+     # Include the CMake script UseCython.cmake.  This defines add_cython_module().
+     # Instruction for use can be found at the top of cmake/UseCython.cmake.
+diff --git a/cli/CMakeLists.txt b/cli/CMakeLists.txt
+index 5e556b2..9bee61e 100644
+--- a/cli/CMakeLists.txt
++++ b/cli/CMakeLists.txt
+@@ -8,9 +8,6 @@ INCLUDE_DIRECTORIES(BEFORE ${CYCLUS_CORE_INCLUDE_DIRS})
+ SET(CYCLUS_SOURCE ${CYCLUS_SOURCE}
+     cyclus.cc
+     )
+-IF (APPLE)
+-    SET(LIBS ${Python3_LIBRARIES} ${LIBS})
+-ENDIF(APPLE)
+ 
+ ADD_EXECUTABLE(cyclus_cli ${CYCLUS_SOURCE})
+ set_target_properties(cyclus_cli PROPERTIES OUTPUT_NAME cyclus)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 19a2789..a41e68e 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -246,7 +246,7 @@ SET_TARGET_PROPERTIES(cyclus
+     INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib"
+     )
+ 
+-TARGET_LINK_LIBRARIES(cyclus dl ${LIBS})
++TARGET_LINK_LIBRARIES(cyclus dl ${LIBS} Python3::Python)
+ 
+ INSTALL(
+     TARGETS cyclus
+-- 
+2.56.0
+

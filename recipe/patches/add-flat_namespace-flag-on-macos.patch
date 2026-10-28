@@ -1,0 +1,39 @@
+From 427c5440ef9b31bc16f9106bb65bb6d0bd7e59fc Mon Sep 17 00:00:00 2001
+From: bennibbelink <79653949+bennibbelink@users.noreply.github.com>
+Date: Wed, 2 Oct 2024 07:52:21 -0400
+Subject: [PATCH] add -flat_namespace flag on macos
+
+---
+ CMakeLists.txt        | 2 +-
+ cmake/UseCython.cmake | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 46a6486..e8c5771 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -127,7 +127,7 @@ IF(NOT CYCLUS_DOC_ONLY)
+         set(suffix ".dll")
+         set(dynamicloadlib "windows_helper_functions.h")
+     ELSEIF(APPLE)
+-        set(CMAKE_SHARED_LINKER_FLAGS "-undefined dynamic_lookup")
++        set(CMAKE_SHARED_LINKER_FLAGS "-undefined dynamic_lookup -flat_namespace")
+         set(suffix ".dylib")
+         set(dynamicloadlib "unix_helper_functions.h")
+     ELSE()
+diff --git a/cmake/UseCython.cmake b/cmake/UseCython.cmake
+index 122a815..f02f3e1 100644
+--- a/cmake/UseCython.cmake
++++ b/cmake/UseCython.cmake
+@@ -270,7 +270,7 @@ function( cython_add_module _name )
+   include_directories( ${Python3_INCLUDE_DIRS} )
+   Python3_add_library( ${_name} ${generated_file} ${other_module_sources} )
+   if( APPLE )
+-    set_target_properties( ${_name} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup" )
++    set_target_properties( ${_name} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup -flat_namespace" )
+   else()
+     target_link_libraries( ${_name} PRIVATE ${Python3_LIBRARIES} )
+   endif()
+-- 
+2.56.0
+
