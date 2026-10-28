@@ -17,6 +17,8 @@ source:
     # Boost >= 1.86 changed sha1::digest_type; minimal backport of the fix in
     # https://github.com/cyclus/cyclus/pull/1792
     - patches/support-the-Boost-1.86-sha1-digest_type.patch
+    # keep LDFLAGS (-L$PREFIX/lib, rpath) when linking shared libs on Linux
+    - patches/append-to-CMAKE_SHARED_LINKER_FLAGS-instead-of-replacing-it.patch
     # Boost >= 1.86 uuid is no longer brace-initialisable; upstream cyclus/cyclus@e77848ce86
     # from https://github.com/cyclus/cyclus/pull/1792
     - patches/construct-uuid-correctly.patch
