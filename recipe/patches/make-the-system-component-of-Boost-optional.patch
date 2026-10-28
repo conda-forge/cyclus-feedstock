@@ -1,0 +1,83 @@
+From 5e1f4b0986871b4b7c9d863836798db49fd74692 Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Thu, 8 Oct 2026 14:36:07 -0600
+Subject: [PATCH] build: Make the system component of Boost optional
+
+CMakeLists.txt and stubs/CMakeLists.txt required the system component of
+Boost. Boost.System is header-only as of Boost 1.69, and what was left
+of the component has changed since:
+
+* Up to Boost 1.88 there is a compiled stub library, kept for
+  compatibility, and a CMake package for it.
+* Boost 1.89 removed the stub library, and Boost 1.89 to 1.91 have no
+  CMake package for the component either, so requiring it fails:
+
+      Could not find a package configuration file provided by
+      "boost_system" (requested version 1.89.0)
+
+* Boost 1.92 has the CMake package again, as a header-only target.
+
+Make the component optional and only link to it when it is found, which
+works with all of these.
+
+Assisted-by: ClaudeCode:claude-opus-5-5
+---
+ CMakeLists.txt       | 13 ++++++++++---
+ stubs/CMakeLists.txt | 10 ++++++++--
+ 2 files changed, 18 insertions(+), 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f00383a..bb7bfa8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -224,14 +224,21 @@ IF(NOT CYCLUS_DOC_ONLY)
+       SET(BOOST_ROOT "${DEPS_ROOT_DIR}")
+       SET(BOOST_INCLUDEDIR "${DEPS_INCLUDE_HINTS}")
+     endif (DEPS_ROOT_DIR)
+-    FIND_PACKAGE(Boost COMPONENTS program_options filesystem system serialization REQUIRED)
++    # Boost.System is header-only as of Boost 1.69. Boost 1.89 to 1.91 have no
++    # system component at all, as 1.89 removed the compiled stub library and
++    # the CMake package only returned, as a header-only target, in 1.92. So
++    # the component is optional and is only linked to when it is found.
++    FIND_PACKAGE(Boost COMPONENTS program_options filesystem serialization REQUIRED
++                 OPTIONAL_COMPONENTS system)
+     MESSAGE("--    Boost Root: ${Boost_ROOT}")
+     MESSAGE("--    Boost Include directory: ${Boost_INCLUDE_DIR}")
+     MESSAGE("--    Boost Library directories: ${Boost_LIBRARY_DIRS}")
+     SET(LIBS ${LIBS} ${Boost_PROGRAM_OPTIONS_LIBRARY})
+     MESSAGE("--    Boost Program Options location: ${Boost_PROGRAM_OPTIONS_LIBRARY}")
+-    SET(LIBS ${LIBS} ${Boost_SYSTEM_LIBRARY})
+-    MESSAGE("--    Boost System location: ${Boost_SYSTEM_LIBRARY}")
++    IF(Boost_SYSTEM_FOUND)
++        SET(LIBS ${LIBS} ${Boost_SYSTEM_LIBRARY})
++        MESSAGE("--    Boost System location: ${Boost_SYSTEM_LIBRARY}")
++    ENDIF()
+     SET(LIBS ${LIBS} ${Boost_FILESYSTEM_LIBRARY})
+     MESSAGE("--    Boost Filesystem location: ${Boost_FILESYSTEM_LIBRARY}")
+     SET(LIBS ${LIBS} ${Boost_SERIALIZATION_LIBRARY})
+diff --git a/stubs/CMakeLists.txt b/stubs/CMakeLists.txt
+index ea8588f..03714a9 100644
+--- a/stubs/CMakeLists.txt
++++ b/stubs/CMakeLists.txt
+@@ -100,10 +100,16 @@ MESSAGE("--LD_LIBRARY_PATH: $ENV{LD_LIBRARY_PATH}")
+ # Include the boost header files, system, and filesystem libraries
+ SET(Boost_USE_STATIC_LIBS       OFF)
+ SET(Boost_USE_STATIC_RUNTIME    OFF)
+-FIND_PACKAGE(Boost COMPONENTS filesystem system REQUIRED)
++# Boost.System is header-only as of Boost 1.69. Boost 1.89 to 1.91 have no
++# system component at all, as 1.89 removed the compiled stub library and
++# the CMake package only returned, as a header-only target, in 1.92. So
++# the component is optional and is only linked to when it is found.
++FIND_PACKAGE(Boost COMPONENTS filesystem REQUIRED OPTIONAL_COMPONENTS system)
+ SET(STUB_INCLUDE_DIRS ${STUB_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
+ SET(LIBS ${LIBS} ${Boost_FILESYSTEM_LIBRARY})
+-SET(LIBS ${LIBS} ${Boost_SYSTEM_LIBRARY})
++IF(Boost_SYSTEM_FOUND)
++    SET(LIBS ${LIBS} ${Boost_SYSTEM_LIBRARY})
++ENDIF()
+ 
+ # Find HDF5
+ FIND_PACKAGE(HDF5 REQUIRED)
+-- 
+2.56.0
+

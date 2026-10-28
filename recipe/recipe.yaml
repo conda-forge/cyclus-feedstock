@@ -58,6 +58,10 @@ source:
     # test_env.py looks for libagents.so, which is libagents.dylib on macOS;
     # upstream cyclus/cyclus@776efd5b32 from https://github.com/cyclus/cyclus/pull/1814
     - patches/look-for-library-with-platform-specific-file-extension.patch
+    # Boost 1.89 removed the compiled Boost.System stub library and Boost 1.89 to
+    # 1.91 have no CMake package for it, so requiring the system component fails;
+    # upstream cyclus/cyclus@5e1f4b0986 from https://github.com/cyclus/cyclus/pull/1985
+    - patches/make-the-system-component-of-Boost-optional.patch
     # CompMathTests.ApplyThresholdMedium dereferences and increments an iterator
     # to a map node that ApplyThreshold has just erased, which segfaults
     # depending on whether the allocator reuses the freed node (seen on
