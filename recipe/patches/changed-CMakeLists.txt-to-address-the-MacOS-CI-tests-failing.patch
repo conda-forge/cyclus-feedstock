@@ -1,0 +1,26 @@
+From c768b40bb2115d66191dc6929222c22eb02b2172 Mon Sep 17 00:00:00 2001
+From: Dean Krueger <dkrueger13@gmail.com>
+Date: Wed, 30 Sep 2026 13:23:21 -0500
+Subject: [PATCH] Changed CMakeLists.txt to address the MacOS CI tests failing
+
+---
+ CMakeLists.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e8c5771..f00383a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -127,7 +127,8 @@ IF(NOT CYCLUS_DOC_ONLY)
+         set(suffix ".dll")
+         set(dynamicloadlib "windows_helper_functions.h")
+     ELSEIF(APPLE)
+-        set(CMAKE_SHARED_LINKER_FLAGS "-undefined dynamic_lookup -flat_namespace")
++        set(CMAKE_SHARED_LINKER_FLAGS
++            "${CMAKE_SHARED_LINKER_FLAGS} -undefined dynamic_lookup -flat_namespace")
+         set(suffix ".dylib")
+         set(dynamicloadlib "unix_helper_functions.h")
+     ELSE()
+-- 
+2.56.0
+

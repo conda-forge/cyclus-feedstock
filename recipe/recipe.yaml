@@ -17,7 +17,8 @@ source:
     # Boost >= 1.86 changed sha1::digest_type; minimal backport of the fix in
     # https://github.com/cyclus/cyclus/pull/1792
     - patches/support-the-Boost-1.86-sha1-digest_type.patch
-    # keep LDFLAGS (-L$PREFIX/lib, rpath) when linking shared libs on Linux
+    # keep LDFLAGS (-L$PREFIX/lib, rpath) when linking shared libs on Linux; upstream
+    # only fixed the macOS branch (see changed-CMakeLists.txt-... below)
     - patches/append-to-CMAKE_SHARED_LINKER_FLAGS-instead-of-replacing-it.patch
     # Boost >= 1.86 uuid is no longer brace-initialisable; upstream cyclus/cyclus@e77848ce86
     # from https://github.com/cyclus/cyclus/pull/1792
@@ -51,6 +52,9 @@ source:
     # segfaults on import; upstream cyclus/cyclus@427c5440ef from
     # https://github.com/cyclus/cyclus/pull/1814
     - patches/add-flat_namespace-flag-on-macos.patch
+    # keep LDFLAGS (-L$PREFIX/lib) when linking shared libs on macOS; upstream
+    # cyclus/cyclus@c768b40bb2 from https://github.com/cyclus/cyclus/pull/1970
+    - patches/changed-CMakeLists.txt-to-address-the-MacOS-CI-tests-failing.patch
 
 build:
   number: 6
