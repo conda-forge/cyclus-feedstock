@@ -41,6 +41,10 @@ source:
     # platform as upstream cyclus/cyclus@2b5d4bc09f from
     # https://github.com/cyclus/cyclus/pull/1814
     - patches/only-link-libcyclus-explicitly-to-python-libraries.patch
+    # Python only imports extension modules named .so, but on macOS the pymodule,
+    # eventhooks, and pyinfile modules were installed to site-packages as .dylib;
+    # upstream cyclus/cyclus@26a7eef5a6 from https://github.com/cyclus/cyclus/pull/1814
+    - patches/create-so-symlink-to-libraries-instead-of-second-installation.patch
 
 build:
   number: 6
