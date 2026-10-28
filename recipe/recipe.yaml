@@ -14,6 +14,9 @@ source:
     # GCC 15 rejects the const-method write; upstream cyclus/cyclus@723619f301
     # from https://github.com/cyclus/cyclus/pull/1814
     - patches/make-dirty_quantity_-mutable.patch
+    # (int)1e299 is INT_MIN with GCC 15, hanging MixedActiveDormant; upstream
+    # cyclus/cyclus@9c2e0196b0 from https://github.com/cyclus/cyclus/pull/1757
+    - patches/do-not-pass-1e299-as-an-int-bound.patch
 
 build:
   number: 6
