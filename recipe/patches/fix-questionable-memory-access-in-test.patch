@@ -1,0 +1,27 @@
+From 40ff4190ecba6ee839d381ca1bca03bfe928b9f0 Mon Sep 17 00:00:00 2001
+From: "Paul P.H. Wilson" <paul.wilson@wisc.edu>
+Date: Tue, 30 Jun 2026 11:23:45 -0500
+Subject: [PATCH] fix questionable memory access in test
+
+---
+ tests/comp_math_tests.cc | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/tests/comp_math_tests.cc b/tests/comp_math_tests.cc
+index 6d3fdb055a..316adf232e 100644
+--- a/tests/comp_math_tests.cc
++++ b/tests/comp_math_tests.cc
+@@ -147,10 +147,9 @@ TEST(CompMathTests, ApplyThresholdMedium) {
+   v[3] = 3.0;
+ 
+   // if the threshold is in a reasonable range, it should zero small vals
+-  CompMap::iterator it;
+-  for (it = v.begin(); it != v.end(); ++it) {
+-    EXPECT_NO_THROW(cm::ApplyThreshold(&v, it->second));
+-    EXPECT_FLOAT_EQ(0, v[it->first]);
++  for (int key = 1; key <= 3; key++) {
++      EXPECT_NO_THROW(cm::ApplyThreshold(&v, v[key]));
++      EXPECT_FLOAT_EQ(0, v[key]);
+   }
+ }
+ 

@@ -58,9 +58,15 @@ source:
     # test_env.py looks for libagents.so, which is libagents.dylib on macOS;
     # upstream cyclus/cyclus@776efd5b32 from https://github.com/cyclus/cyclus/pull/1814
     - patches/look-for-library-with-platform-specific-file-extension.patch
+    # CompMathTests.ApplyThresholdMedium dereferences and increments an iterator
+    # to a map node that ApplyThreshold has just erased, which segfaults
+    # depending on whether the allocator reuses the freed node (seen on
+    # osx-arm64); upstream cyclus/cyclus@40ff4190ec from
+    # https://github.com/cyclus/cyclus/pull/1965
+    - patches/fix-questionable-memory-access-in-test.patch
 
 build:
-  number: 8
+  number: 9
   skip:
     - win
 
@@ -126,9 +132,14 @@ requirements:
     - python
     - pandas
     - pprintpp
+  run_exports:
+    # downstream archetype libraries (e.g. cycamore) link to libcyclus
+    - ${{ pin_subpackage("cyclus", upper_bound="x.x") }}
 
 tests:
   - package_contents:
+      lib:
+        - cyclus
       bin:
         - cyclus
         - cycpp.py
