@@ -1,0 +1,24 @@
+From: Matthew Feickert <matthew.feickert@wisc.edu>
+Date: Wed, 28 Oct 2026 19:30:00 -0600
+Subject: [PATCH] Store the group name in GroupNotFound
+
+The GroupNotFound(fname, gname) constructor dropped gname, so what()
+reported "the group  not found in the file ..." with an empty group
+name.
+
+---
+ src/pyne.h |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/pyne.h b/src/pyne.h
+index 94edf6c..ff3b7ad 100644
+--- a/src/pyne.h
++++ b/src/pyne.h
+@@ -425,6 +425,7 @@ namespace h5wrap
+     GroupNotFound(std::string fname, std::string gname)
+     {
+       filename = fname;
++      groupname = gname;
+       setMsg();
+     };
+ 
