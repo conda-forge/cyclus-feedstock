@@ -58,15 +58,32 @@ source:
     # test_env.py looks for libagents.so, which is libagents.dylib on macOS;
     # upstream cyclus/cyclus@776efd5b32 from https://github.com/cyclus/cyclus/pull/1814
     - patches/look-for-library-with-platform-specific-file-extension.patch
+    # Boost 1.89 removed the compiled Boost.System stub library and Boost 1.89 to
+    # 1.91 have no CMake package for it, so requiring the system component fails;
+    # upstream cyclus/cyclus@5e1f4b0986 from https://github.com/cyclus/cyclus/pull/1985
+    - patches/make-the-system-component-of-Boost-optional.patch
     # CompMathTests.ApplyThresholdMedium dereferences and increments an iterator
     # to a map node that ApplyThreshold has just erased, which segfaults
     # depending on whether the allocator reuses the freed node (seen on
     # osx-arm64); upstream cyclus/cyclus@40ff4190ec from
     # https://github.com/cyclus/cyclus/pull/1965
     - patches/fix-questionable-memory-access-in-test.patch
+    # the PyNE exceptions in the amalgamated src/pyne.h return c_str() of a
+    # local string from what(), a use-after-free that Clang warns about with
+    # -Wreturn-stack-address in every file that includes pyne.h; not yet
+    # fixed upstream in cyclus or (for most of the classes) in pyne
+    - patches/keep-pyne-exception-messages-alive-after-what-returns.patch
+    # the PyNE GroupNotFound constructor drops the group name, so its message
+    # reads "the group  not found"; not yet fixed upstream in cyclus or pyne
+    - patches/store-the-group-name-in-GroupNotFound.patch
+    # the PyNE h5_array_to_cpp_vector_{1,2,3}d readers in src/pyne.h read into
+    # a stack VLA sized by the dataset, which can overflow the stack and which
+    # Clang warns about with -Wvla-cxx-extension in every file that includes
+    # pyne.h; not yet fixed upstream in cyclus or pyne
+    - patches/read-hdf5-arrays-into-a-heap-buffer-instead-of-a-VLA.patch
 
 build:
-  number: 9
+  number: 10
   skip:
     - win
 

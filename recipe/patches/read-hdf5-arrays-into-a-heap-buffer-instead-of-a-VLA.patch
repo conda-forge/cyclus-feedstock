@@ -1,0 +1,49 @@
+From: Matthew Feickert <matthew.feickert@wisc.edu>
+Date: Wed, 28 Oct 2026 20:30:00 -0600
+Subject: [PATCH] Read HDF5 arrays into a heap buffer instead of a VLA
+
+h5_array_to_cpp_vector_1d, _2d, and _3d read the dataset into a
+variable length array on the stack, sized by the dataset in the file.
+VLAs are not standard C++ (Clang warns with -Wvla-cxx-extension in every
+translation unit that includes pyne.h), and a large enough dataset
+overflows the stack. Read into a std::vector instead, as
+h5_array_to_cpp_set already reads into a heap allocation.
+
+---
+ src/pyne.h |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/src/pyne.h b/src/pyne.h
+index ff3b7ad..0eed7c3 100644
+--- a/src/pyne.h
++++ b/src/pyne.h
+@@ -584,7 +584,8 @@ namespace h5wrap
+     int arr_ndim = H5Sget_simple_extent_dims(arr_space, arr_dims, NULL);
+ 
+     // Read in data from file to memory
+-    T mem_arr [arr_dims[0]];
++    std::vector<T> mem_vec (arr_dims[0]);
++    T * mem_arr = mem_vec.data();
+     H5Dread(dset, dtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, mem_arr);
+ 
+     // Load new values into the vector
+@@ -615,7 +616,8 @@ namespace h5wrap
+     // Read in data from file to memory
+     // Have to read in as 1D array to get HDF5 and new keyword
+     // to play nice with each other
+-    T mem_arr [arr_dims[0] * arr_dims[1]];
++    std::vector<T> mem_vec (arr_dims[0] * arr_dims[1]);
++    T * mem_arr = mem_vec.data();
+     H5Dread(dset, dtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, mem_arr);
+ 
+     // Load new values into the vector of vectors, using some indexing tricks
+@@ -651,7 +653,8 @@ namespace h5wrap
+     // Read in data from file to memory
+     // Have to read in as 1D array to get HDF5 and new keyword
+     // to play nice with each other
+-    T mem_arr [arr_dims[0] * arr_dims[1] * arr_dims[2]];
++    std::vector<T> mem_vec (arr_dims[0] * arr_dims[1] * arr_dims[2]);
++    T * mem_arr = mem_vec.data();
+     H5Dread(dset, dtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, mem_arr);
+ 
+     // Load new values into the vector of vectors of vectors, using some indexing tricks
