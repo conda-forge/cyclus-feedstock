@@ -23,7 +23,7 @@ glib:
 hdf5:
 - '2'
 libboost_devel:
-- '1.88'
+- '1.90'
 liblapack:
 - 3.9.* *netlib
 libxml2:
