@@ -68,6 +68,11 @@ source:
     # osx-arm64); upstream cyclus/cyclus@40ff4190ec from
     # https://github.com/cyclus/cyclus/pull/1965
     - patches/fix-questionable-memory-access-in-test.patch
+    # the PyNE exceptions in the amalgamated src/pyne.h return c_str() of a
+    # local string from what(), a use-after-free that Clang warns about with
+    # -Wreturn-stack-address in every file that includes pyne.h; not yet
+    # fixed upstream in cyclus or (for most of the classes) in pyne
+    - patches/keep-pyne-exception-messages-alive-after-what-returns.patch
 
 build:
   number: 10

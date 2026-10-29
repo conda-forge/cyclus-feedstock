@@ -1,0 +1,480 @@
+From: Matthew Feickert <matthew.feickert@wisc.edu>
+Date: Wed, 28 Oct 2026 19:00:00 -0600
+Subject: [PATCH] Keep PyNE exception messages alive after what() returns
+
+The what() methods of FileNotFound, FileNotHDF5, GroupNotFound,
+PathNotFound, NotANuclide, IndeterminateNuclideForm, NotAReaction, and
+IndeterminateReactionForm built their message in a local std::string
+and returned its c_str(), a pointer to memory freed when what()
+returns. Reading the message is a heap-use-after-free under
+AddressSanitizer, and Clang warns about it with -Wreturn-stack-address
+in every translation unit that includes pyne.h. Build the message in a
+member from every constructor instead, so it lives as long as the
+exception object, as std::exception::what() requires. This follows
+upstream pyne, which fixed NotANuclide and NotAReaction the same way
+with setNaNEstr() and setNarxstr().
+
+---
+ src/pyne.h |  149 ++++++++++++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 109 insertions(+), 40 deletions(-)
+
+diff --git a/src/pyne.h b/src/pyne.h
+index c058868..94edf6c 100644
+--- a/src/pyne.h
++++ b/src/pyne.h
+@@ -220,7 +220,7 @@ namespace pyne {
+   public:
+ 
+     /// default constructor
+-    FileNotFound () {};
++    FileNotFound () { setFNFstr(); };
+ 
+     /// default destructor
+     ~FileNotFound () throw () {};
+@@ -229,19 +229,25 @@ namespace pyne {
+     FileNotFound(std::string fname)
+     {
+       filename = fname;
++      setFNFstr();
+     };
+ 
+-    /// Creates a helpful error message.
+-    virtual const char* what() const throw()
++    /// Builds the message returned by what().
++    void setFNFstr()
+     {
+-      std::string FNFstr ("File not found: ");
++      FNFstr = "File not found: ";
+       if (!filename.empty())
+         FNFstr += filename;
++    };
+ 
+-      return (const char *) FNFstr.c_str();
++    /// Creates a helpful error message.
++    virtual const char* what() const throw()
++    {
++      return FNFstr.c_str();
+     };
+ 
+   private:
++    std::string FNFstr; ///< message returned by what()
+     std::string filename; ///< unfindable filename.
+   };
+ 
+@@ -372,7 +378,7 @@ namespace h5wrap
+   public:
+ 
+     /// default constructor
+-    FileNotHDF5(){};
++    FileNotHDF5(){ setFNH5str(); };
+ 
+     /// default destructor
+     ~FileNotHDF5() throw () {};
+@@ -381,19 +387,25 @@ namespace h5wrap
+     FileNotHDF5(std::string fname)
+     {
+       filename = fname;
++      setFNH5str();
+     };
+ 
+-    /// helpful error message that includes the filename
+-    virtual const char* what() const throw()
++    /// Builds the message returned by what().
++    void setFNH5str()
+     {
+-      std::string FNH5str ("Not a valid HDF5 file: ");
++      FNH5str = "Not a valid HDF5 file: ";
+       if (!filename.empty())
+         FNH5str += filename;
++    };
+ 
+-      return (const char *) FNH5str.c_str();
++    /// helpful error message that includes the filename
++    virtual const char* what() const throw()
++    {
++      return FNH5str.c_str();
+     };
+ 
+   private:
++    std::string FNH5str; ///< message returned by what()
+     std::string filename; ///< the file which is not in HDF5 format.
+   };
+ 
+@@ -404,7 +416,7 @@ namespace h5wrap
+   public:
+ 
+     /// default constructor
+-    GroupNotFound(){};
++    GroupNotFound(){ setMsg(); };
+ 
+     /// default destructor
+     ~GroupNotFound() throw () {};
+@@ -413,19 +425,26 @@ namespace h5wrap
+     GroupNotFound(std::string fname, std::string gname)
+     {
+       filename = fname;
++      setMsg();
+     };
+ 
+-    /// helpful error message that includes the filename and the groupname
+-    virtual const char* what() const throw()
++    /// Builds the message returned by what().
++    void setMsg()
+     {
+-      std::string msg ("the group ");
++      msg = "the group ";
+       msg += groupname;
+       msg += " not found in the file ";
+       msg += filename;
+-      return (const char *) msg.c_str();
++    };
++
++    /// helpful error message that includes the filename and the groupname
++    virtual const char* what() const throw()
++    {
++      return msg.c_str();
+     };
+ 
+   private:
++    std::string msg; ///< message returned by what()
+     std::string filename;   ///< the HDF5 file
+     std::string groupname;  ///< the group in the hierarchy
+   };
+@@ -436,7 +455,7 @@ namespace h5wrap
+   public:
+ 
+     /// default constructor
+-    PathNotFound(){};
++    PathNotFound(){ setMsg(); };
+ 
+     /// default destructor
+     ~PathNotFound() throw () {};
+@@ -446,19 +465,26 @@ namespace h5wrap
+     {
+       filename = fname;
+       path = pname;
++      setMsg();
+     };
+ 
+-    /// helpful error message that includes the filename and the pathname
+-    virtual const char* what() const throw()
++    /// Builds the message returned by what().
++    void setMsg()
+     {
+-      std::string msg ("the path ");
++      msg = "the path ";
+       msg += path;
+       msg += " was not found in the HDF5 file ";
+       msg += filename;
+-      return (const char *) msg.c_str();
++    };
++
++    /// helpful error message that includes the filename and the pathname
++    virtual const char* what() const throw()
++    {
++      return msg.c_str();
+     };
+ 
+   private:
++    std::string msg; ///< message returned by what()
+     std::string filename; ///< the HDF5 file
+     std::string path;     ///< the path in the file
+   };
+@@ -870,7 +896,7 @@ namespace nucname
+   {
+   public:
+     /// default constructor
+-    NotANuclide () {};
++    NotANuclide () { setNaNEstr(); };
+ 
+     /// default destructor
+     ~NotANuclide () throw () {};
+@@ -882,6 +908,7 @@ namespace nucname
+     {
+        nucwas = wasptr;
+        nucnow = nowptr;
++      setNaNEstr();
+     };
+ 
+     /// Constructor given previous and current state of nulide name
+@@ -891,6 +918,7 @@ namespace nucname
+     {
+       nucwas = wasptr;
+       nucnow = pyne::to_str(nowptr);
++      setNaNEstr();
+     };
+ 
+     /// Constructor given previous and current state of nulide name
+@@ -900,6 +928,7 @@ namespace nucname
+     {
+       nucwas = pyne::to_str(wasptr);
+       nucnow = nowptr;
++      setNaNEstr();
+     };
+ 
+     /// Constructor given previous and current state of nulide name
+@@ -909,13 +938,14 @@ namespace nucname
+     {
+       nucwas = pyne::to_str(wasptr);
+       nucnow = pyne::to_str(nowptr);
++      setNaNEstr();
+     };
+ 
+     /// Generates an informational message for the exception
+-    /// \return The error string
+-    virtual const char* what() const throw()
++    /// Builds the message returned by what().
++    void setNaNEstr()
+     {
+-      std::string NaNEstr ("Not a Nuclide! ");
++      NaNEstr = "Not a Nuclide! ";
+       if (!nucwas.empty())
+         NaNEstr += nucwas;
+ 
+@@ -924,10 +954,16 @@ namespace nucname
+         NaNEstr += " --> ";
+         NaNEstr += nucnow;
+       }
+-      return (const char *) NaNEstr.c_str();
++    };
++
++    /// \return The error string
++    virtual const char* what() const throw()
++    {
++      return NaNEstr.c_str();
+     };
+ 
+   private:
++    std::string NaNEstr; ///< message returned by what()
+     std::string nucwas; ///< previous nuclide state
+     std::string nucnow; ///< current nuclide state
+   };
+@@ -938,7 +974,7 @@ namespace nucname
+   {
+   public:
+     /// default constructor
+-    IndeterminateNuclideForm () {};
++    IndeterminateNuclideForm () { setINFEstr(); };
+ 
+     /// default destuctor
+     ~IndeterminateNuclideForm () throw () {};
+@@ -950,6 +986,7 @@ namespace nucname
+     {
+        nucwas = wasptr;
+        nucnow = nowptr;
++      setINFEstr();
+     };
+ 
+     /// Constructor given previous and current state of nulide name
+@@ -959,6 +996,7 @@ namespace nucname
+     {
+       nucwas = wasptr;
+       nucnow = pyne::to_str(nowptr);
++      setINFEstr();
+     };
+ 
+     /// Constructor given previous and current state of nulide name
+@@ -968,6 +1006,7 @@ namespace nucname
+     {
+       nucwas = pyne::to_str(wasptr);
+       nucnow = nowptr;
++      setINFEstr();
+     };
+ 
+     /// Constructor given previous and current state of nulide name
+@@ -977,13 +1016,14 @@ namespace nucname
+     {
+       nucwas = pyne::to_str(wasptr);
+       nucnow = pyne::to_str(nowptr);
++      setINFEstr();
+     };
+ 
+     /// Generates an informational message for the exception
+-    /// \return The error string
+-    virtual const char* what() const throw()
++    /// Builds the message returned by what().
++    void setINFEstr()
+     {
+-      std::string INFEstr ("Indeterminate nuclide form: ");
++      INFEstr = "Indeterminate nuclide form: ";
+       if (!nucwas.empty())
+         INFEstr += nucwas;
+ 
+@@ -992,10 +1032,16 @@ namespace nucname
+         INFEstr += " --> ";
+         INFEstr += nucnow;
+       }
+-      return (const char *) INFEstr.c_str();
++    };
++
++    /// \return The error string
++    virtual const char* what() const throw()
++    {
++      return INFEstr.c_str();
+     }
+ 
+   private:
++    std::string INFEstr; ///< message returned by what()
+     std::string nucwas; ///< previous nuclide state
+     std::string nucnow; ///< current nuclide state
+   };
+@@ -1605,7 +1651,7 @@ namespace rxname
+   public:
+ 
+     /// default constructor
+-    NotAReaction () {};
++    NotAReaction () { setNarxstr(); };
+ 
+     /// default destructor
+     ~NotAReaction () throw () {};
+@@ -1616,6 +1662,7 @@ namespace rxname
+     {
+        rxwas = wasptr;
+        rxnow = nowptr;
++      setNarxstr();
+     };
+ 
+     /// Constructor using original reaction (\a wasptr) and the eventual state
+@@ -1624,6 +1671,7 @@ namespace rxname
+     {
+       rxwas = wasptr;
+       rxnow = pyne::to_str(nowptr);
++      setNarxstr();
+     };
+ 
+     /// Constructor using original reaction (\a wasptr) and the eventual state
+@@ -1632,6 +1680,7 @@ namespace rxname
+     {
+       rxwas = pyne::to_str(wasptr);
+       rxnow = nowptr;
++      setNarxstr();
+     };
+ 
+     /// Constructor using original reaction (\a wasptr) and the eventual state
+@@ -1640,6 +1689,7 @@ namespace rxname
+     {
+       rxwas = pyne::to_str(wasptr);
+       rxnow = pyne::to_str(nowptr);
++      setNarxstr();
+     };
+ 
+     /// Constructor using original reaction (\a wasptr) and the eventual state
+@@ -1648,6 +1698,7 @@ namespace rxname
+     {
+       rxwas = wasptr;
+       rxnow = pyne::to_str(nowptr);
++      setNarxstr();
+     };
+ 
+     /// Constructor using original reaction (\a wasptr) and the eventual state
+@@ -1656,6 +1707,7 @@ namespace rxname
+     {
+       rxwas = pyne::to_str(wasptr);
+       rxnow = nowptr;
++      setNarxstr();
+     };
+ 
+     /// Constructor using original reaction (\a wasptr) and the eventual state
+@@ -1664,12 +1716,13 @@ namespace rxname
+     {
+       rxwas = pyne::to_str(wasptr);
+       rxnow = pyne::to_str(nowptr);
++      setNarxstr();
+     };
+ 
+-    /// Returns a helpful error message containing prior and current reaction state.
+-    virtual const char* what() const throw()
++    /// Builds the message returned by what().
++    void setNarxstr()
+     {
+-      std::string narxstr ("Not a reaction! ");
++      narxstr = "Not a reaction! ";
+       if (!rxwas.empty())
+         narxstr += rxwas;
+ 
+@@ -1678,10 +1731,16 @@ namespace rxname
+         narxstr += " --> ";
+         narxstr += rxnow;
+       }
+-      return (const char *) narxstr.c_str();
++    };
++
++    /// Returns a helpful error message containing prior and current reaction state.
++    virtual const char* what() const throw()
++    {
++      return narxstr.c_str();
+     };
+ 
+   private:
++    std::string narxstr; ///< message returned by what()
+     std::string rxwas;  ///< previous reaction state
+     std::string rxnow;  ///< current reaction state
+   };
+@@ -1694,7 +1753,7 @@ namespace rxname
+   public:
+ 
+     /// default constructor
+-    IndeterminateReactionForm () {};
++    IndeterminateReactionForm () { setINFEstr(); };
+ 
+     /// default destructor
+     ~IndeterminateReactionForm () throw () {};
+@@ -1705,6 +1764,7 @@ namespace rxname
+     {
+        rxwas = wasptr;
+        rxnow = nowptr;
++      setINFEstr();
+     };
+ 
+     /// Constructor using original reaction (\a wasptr) and the eventual state
+@@ -1713,6 +1773,7 @@ namespace rxname
+     {
+       rxwas = wasptr;
+       rxnow = pyne::to_str(nowptr);
++      setINFEstr();
+     };
+ 
+     /// Constructor using original reaction (\a wasptr) and the eventual state
+@@ -1721,6 +1782,7 @@ namespace rxname
+     {
+       rxwas = pyne::to_str(wasptr);
+       rxnow = nowptr;
++      setINFEstr();
+     };
+ 
+     /// Constructor using original reaction (\a wasptr) and the eventual state
+@@ -1729,12 +1791,13 @@ namespace rxname
+     {
+       rxwas = pyne::to_str(wasptr);
+       rxnow = pyne::to_str(nowptr);
++      setINFEstr();
+     };
+ 
+-    /// Returns a helpful error message containing prior and current reaction state.
+-    virtual const char* what() const throw()
++    /// Builds the message returned by what().
++    void setINFEstr()
+     {
+-      std::string INFEstr ("Indeterminate reaction form: ");
++      INFEstr = "Indeterminate reaction form: ";
+       if (!rxwas.empty())
+         INFEstr += rxwas;
+ 
+@@ -1743,10 +1806,16 @@ namespace rxname
+         INFEstr += " --> ";
+         INFEstr += rxnow;
+       }
+-      return (const char *) INFEstr.c_str();
++    };
++
++    /// Returns a helpful error message containing prior and current reaction state.
++    virtual const char* what() const throw()
++    {
++      return INFEstr.c_str();
+     }
+ 
+   private:
++    std::string INFEstr; ///< message returned by what()
+     std::string rxwas;  ///< previous reaction state
+     std::string rxnow;  ///< current reaction state
+   };
