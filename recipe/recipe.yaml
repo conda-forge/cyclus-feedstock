@@ -76,6 +76,11 @@ source:
     # the PyNE GroupNotFound constructor drops the group name, so its message
     # reads "the group  not found"; not yet fixed upstream in cyclus or pyne
     - patches/store-the-group-name-in-GroupNotFound.patch
+    # the PyNE h5_array_to_cpp_vector_{1,2,3}d readers in src/pyne.h read into
+    # a stack VLA sized by the dataset, which can overflow the stack and which
+    # Clang warns about with -Wvla-cxx-extension in every file that includes
+    # pyne.h; not yet fixed upstream in cyclus or pyne
+    - patches/read-hdf5-arrays-into-a-heap-buffer-instead-of-a-VLA.patch
 
 build:
   number: 10
