@@ -14,6 +14,12 @@ channel_targets:
 - conda-forge main
 coin_or_cbc:
 - '2.10'
+coin_or_clp:
+- '1.17'
+coin_or_osi:
+- '0.108'
+coin_or_utils:
+- '2.11'
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
