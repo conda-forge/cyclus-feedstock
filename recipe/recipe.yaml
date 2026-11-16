@@ -121,6 +121,11 @@ requirements:
         - cython
   host:
     - coin-or-cbc
+    # libcyclus links Clp, OsiClp, Osi, and CoinUtils directly, not only through
+    # Cbc; listed so their run_exports apply instead of overlinking against them
+    - coin-or-clp
+    - coin-or-osi
+    - coin-or-utils
     - libboost-devel
     # headers and libxml++-4.0.pc moved out of libxmlpp-4.0 into libxmlpp-devel
     # in build 4; 5.x is libxml++-5.0, which cyclus does not probe for
