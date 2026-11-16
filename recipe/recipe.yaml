@@ -83,9 +83,27 @@ source:
     - patches/read-hdf5-arrays-into-a-heap-buffer-instead-of-a-VLA.patch
 
 build:
-  number: 10
+  number: 11
   skip:
     - win
+  # --deps-root: cyclus otherwise derives DEPS_ROOT_DIR from the compiler location
+  # (BUILD_PREFIX)
+  # --slow: compiles the PyNE decay and CRAM solvers from decay.cpp and cram.c
+  # instead of downloading prebuilt {decay,cram}-<os>-<compiler>.s assembly, which
+  # is x86_64 only and fails to assemble on linux-aarch64 and osx-arm64
+  # -DPYTHON_SITE_PACKAGES: cyclus otherwise installs its Python modules into the
+  # user site (python -m site --user-site), which is under $HOME, i.e. $SRC_DIR
+  # in rattler-build, so they would be missing from the package
+  script: >-
+    "${PYTHON}" install.py
+    --prefix="${PREFIX}"
+    --deps-root="${PREFIX}"
+    --allow-milps
+    --slow
+    ${CMAKE_ARGS}
+    -DPython3_EXECUTABLE="${PYTHON}"
+    -DPYTHON_SITE_PACKAGES="${SP_DIR}"
+    -j "${CPU_COUNT}"
 
 requirements:
   build:
@@ -95,7 +113,7 @@ requirements:
     - ${{ compiler("cxx") }}
     - cmake
     - make
-    - pkg-config
+    - pkgconf
     - if: build_platform != target_platform
       then:
         - python
